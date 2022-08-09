@@ -82,23 +82,18 @@ namespace VEXGINE::Threading
 			}
 		}
 		
-		void Execute(Job* job)
+		template<bool immediate = false>
+		void _Execute(Job* job)
 		{
 			poolMutex.lock();
-				pool.push_back(job);
+				if constexpr(immediate) pool.push_front(job);
+				else pool.push_back(job);
 			poolMutex.unlock();
-			
 			wakeCondition.notify_one();
 		}
 		
-		void ExecuteImmediate(Job* job)
-		{
-			poolMutex.lock();
-				pool.push_front(job);
-			poolMutex.unlock();
-			
-			wakeCondition.notify_one();
-		}
+		void Execute(Job* job)          { _Execute<false>(job); }
+		void ExecuteImmediate(Job* job) { _Execute<true>(job);  }
 	}
 	
 	void Job::Await() const
