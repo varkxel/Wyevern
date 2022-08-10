@@ -13,10 +13,12 @@ namespace VEXGINE::Threading
 	public:
 		JobFunction function;
 		
-		void Await() const;
-		bool HasCompleted() const;
+		Job(const JobFunction& function) : function(function) {}
 		
-		operator bool() const { return HasCompleted(); }
+		void Await();
+		bool HasCompleted();
+		
+		operator bool() { return HasCompleted(); }
 	private:
 		bool completed = false;
 		std::shared_mutex completedMutex;

@@ -14,7 +14,7 @@ namespace VEXGINE::Threading
 		job->completed = true;
 	}
 	
-	bool Job::HasCompleted() const
+	bool Job::HasCompleted()
 	{
 		std::shared_lock lock(completedMutex);
 		return completed;
@@ -96,7 +96,7 @@ namespace VEXGINE::Threading
 		void ExecuteImmediate(Job* job) { _Execute<true>(job);  }
 	}
 	
-	void Job::Await() const
+	void Job::Await()
 	{
 		while(!HasCompleted()) JobSystem::Poll();
 	}
