@@ -1,9 +1,15 @@
 #include "JobSystem.hpp"
 
 #include <algorithm>
+#include <memory>
 #include <thread>
 
 using namespace VEXGINE::JobSystem;
+
+void WorkerThread(unsigned threadID)
+{
+
+}
 
 Instance::Instance(unsigned maxThreads)
 {
@@ -15,9 +21,30 @@ Instance::Instance(unsigned maxThreads)
 	threads = std::min(maxThreads, std::max(1u, cores - 1));
 	
 	// Initialise the thread queues
-	threadQueues.reset(new JobQueue[threads]);
+	threadQueues = std::make_unique<JobQueue[]>(threads);
 	
+	for(unsigned thread = 0; thread < threads; ++thread)
+	{
+		std::thread worker([thread]
+		{
+			WorkerThread(thread);
+			
+			
+		});
+	}
+}
+
+Instance::~Instance()
+{
+	// Tell all worker threads to quit/complete themselves.
+	state->alive.store(false);
+	state->awake.notify_all();
 	
+	// Wait
+	for(unsigned i = 0; i < threads; ++i)
+	{
+		while(threadQueues[i].processing.load()) std::this_thread::yield();
+	}
 }
 
 bool Instance::JobQueue::Pop(std::shared_ptr<Job>& result)

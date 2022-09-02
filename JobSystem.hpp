@@ -4,9 +4,10 @@
 #include <atomic>
 #include <deque>
 #include <functional>
-#include <memory>
+#include <condition_variable>
 #include <mutex>
 #include <shared_mutex>
+#include <memory>
 #include <type_traits>
 
 namespace VEXGINE::JobSystem
@@ -14,27 +15,40 @@ namespace VEXGINE::JobSystem
 	class Job
 	{
 		friend class Instance;
+	public:
+		// Job();
+		virtual ~Job() = default;
 		
 	protected:
+		/// This method is executed on the worker thread once the job is executed.
 		virtual void Execute() = 0;
 		
 	private:
+		/// Completion status variable for the Job.
+		/// False while the job is not complete, True once the job is completed.
 		std::atomic_bool complete { false };
 	public:
+		/// Returns true when the job has been completed.
 		bool IsComplete() { return complete.load(); }
 	};
 	
 	class Instance final
 	{
+	private:
+		/// The per-thread job queue structure.
+		/// Each worker thread has one queue, this structure is the queue object.
 		struct JobQueue final
 		{
+			/// Processing state variable.
+			/// True while there are worker threads acting on the job queue.
 			std::atomic_bool processing { false };
 			
+			/// The job queue.
 			std::deque<std::shared_ptr<Job>> queue;
 			std::mutex queueMutex;
 			
 			template<bool immediate = false>
-			void Push(std::shared_ptr<Job> job)
+			void Push(const std::shared_ptr<Job>& job)
 			{
 				std::scoped_lock lock(queueMutex);
 				
@@ -45,13 +59,33 @@ namespace VEXGINE::JobSystem
 			bool Pop(std::shared_ptr<Job>& result);
 		};
 		
+		/// Thread-accessible state variables.
+		struct State final
+		{
+			/// Whether the Job System is active.
+			/// Worker threads will terminate if set to false.
+			std::atomic_bool alive { true };
+			
+			/// Condition to wake up a worker thread.
+			std::condition_variable awake;
+			std::mutex awakeMutex;
+		};
+		
+		/// The amount of threads assigned to the Job System.
+		unsigned threads;
+		
+		/// The per-thread job queues.
+		std::unique_ptr<JobQueue[]> threadQueues;
+		
+		/// Thread-accessible state variables.
+		std::shared_ptr<State> state = std::make_shared<State>();
 	public:
 		explicit Instance(unsigned maxThreads = ~0u);
+		~Instance();
 		
-	private:
-		void WorkerThread();
+		/// Returns the amount of threads assigned to the Job System.
+		[[nodiscard]] unsigned Threads() const { return threads; }
 		
-	public:
 		template<typename JobClass>
 		std::shared_ptr<Job> Schedule()
 		{
@@ -64,13 +98,6 @@ namespace VEXGINE::JobSystem
 			
 			return job;
 		}
-		
-	private:
-		std::unique_ptr<JobQueue[]> threadQueues;
-		
-		unsigned threads;
-	public:
-		unsigned Threads() { return threads; }
 	};
 }
 
