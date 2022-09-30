@@ -8,7 +8,7 @@ using namespace VEXGINE::JobSystem;
 
 void WorkerThread(unsigned threadID)
 {
-
+	
 }
 
 Instance::Instance(unsigned maxThreads)
@@ -28,8 +28,6 @@ Instance::Instance(unsigned maxThreads)
 		std::thread worker([thread]
 		{
 			WorkerThread(thread);
-			
-			
 		});
 	}
 }

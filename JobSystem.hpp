@@ -52,6 +52,7 @@ namespace VEXGINE::JobSystem
 			{
 				std::scoped_lock lock(queueMutex);
 				
+				// Push to front or back dependent of the value "immediate".
 				if constexpr(immediate) queue.push_front(job);
 				else queue.push_back(job);
 			}
@@ -59,7 +60,14 @@ namespace VEXGINE::JobSystem
 			bool Pop(std::shared_ptr<Job>& result);
 		};
 		
-		/// Thread-accessible state variables.
+		/// The amount of threads assigned to the Job System.
+		unsigned threads;
+		
+		/// The per-thread job queues.
+		std::unique_ptr<JobQueue[]> threadQueues;
+		std::atomic<unsigned> nextQueue { 0 };
+		
+		/// Worker thread-shared state.
 		struct State final
 		{
 			/// Whether the Job System is active.
@@ -70,14 +78,6 @@ namespace VEXGINE::JobSystem
 			std::condition_variable awake;
 			std::mutex awakeMutex;
 		};
-		
-		/// The amount of threads assigned to the Job System.
-		unsigned threads;
-		
-		/// The per-thread job queues.
-		std::unique_ptr<JobQueue[]> threadQueues;
-		
-		/// Thread-accessible state variables.
 		std::shared_ptr<State> state = std::make_shared<State>();
 	public:
 		explicit Instance(unsigned maxThreads = ~0u);
@@ -89,12 +89,20 @@ namespace VEXGINE::JobSystem
 		template<typename JobClass>
 		std::shared_ptr<Job> Schedule()
 		{
+			// Check that the job is actually executable.
 			static_assert
 			(
 				std::is_base_of<Job, JobClass>::value,
 				"Only types deriving from VEXGINE::JobSystem::Job can be Scheduled by the job system."
 			);
+			
+			// Create job instance and add it to the work queue.
 			std::shared_ptr<Job> job = std::make_shared(new JobClass);
+			const unsigned queue = nextQueue.fetch_add(1) % threads;
+			threadQueues[queue].Push(job);
+			
+			// Wake up a worker thread.
+			state->awake.notify_one();
 			
 			return job;
 		}
