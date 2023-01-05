@@ -1,9 +1,51 @@
 #ifndef WYEVERN_JOBSYSTEM_INCLUDED
 #define WYEVERN_JOBSYSTEM_INCLUDED
 
-namespace Wyevern::JobSystem
+#include <atomic>
+#include <functional>
+#include <memory>
+#include <shared_mutex>
+
+namespace Wyevern
 {
+	struct Job
+	{
+		virtual ~Job() = 0;
+		
+		virtual void Execute() = 0;
+	};
 	
+	class JobSystem
+	{
+	private:
+		struct Task
+		{
+			// Function to execute, provided with the job iteration index.
+			std::function<void(int)> function;
+		};
+		
+		struct JobQueue final
+		{
+			explicit JobQueue(long capacity);
+			
+			long capacity;
+			std::unique_ptr<Task[]> tasks;
+			std::shared_mutex resizeMutex;
+			
+			long back = 0;
+			std::atomic_long front = { 0 };
+			
+			long Size();
+			void Resize();
+			
+			void Push(const Task& task);
+			Task* Pop();
+		};
+		
+	public:
+		explicit JobSystem(unsigned maxThreads = 0u);
+		
+	};
 }
 
 #endif
