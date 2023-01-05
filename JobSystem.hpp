@@ -22,6 +22,8 @@ namespace Wyevern
 		{
 			// Function to execute, provided with the job iteration index.
 			std::function<void(int)> function;
+			
+			std::atomic_int* taskCounter;
 		};
 		
 		struct JobQueue final
@@ -39,7 +41,7 @@ namespace Wyevern
 			void Resize();
 			
 			void Push(const Task& task);
-			Task* Pop();
+			bool Pop(Task& task);
 		};
 		
 	public:

@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <thread>
+#include <stdexcept>
 
 using namespace Wyevern;
 
@@ -18,6 +19,15 @@ JobSystem::JobSystem(const unsigned maxThreads)
 
 JobSystem::JobQueue::JobQueue(long capacity)
 {
+	// Check for valid capacity size.
+	// Must be power of 2 due to the capacity doubling once over capacity.
+	#ifndef WYEVERN_STRIP_CHECKS
+	if(capacity < 2 || (capacity % 2) != 0)
+	{
+		throw std::invalid_argument("Specified capacity \"" + std::to_string(capacity) + "\" is not a power of 2.");
+	}
+	#endif
+	
 	this->capacity = capacity;
 	tasks = std::make_unique<Task[]>(capacity);
 }
@@ -55,17 +65,18 @@ void JobSystem::JobQueue::Push(const Task& task)
 	tasks[back++ % capacity] = task;
 }
 
-JobSystem::Task* JobSystem::JobQueue::Pop()
+bool JobSystem::JobQueue::Pop(Task& task)
 {
-	std::shared_lock lock(resizeMutex);
+	std::shared_lock lock(resizeMutex, std::defer_lock);
+	if(!lock.try_lock()) return false;
 	
-	long jobCount = Size();
-	if(jobCount <= 0)
+	if(Size() <= 0)
 	{
 		lock.unlock();
-		return nullptr;
+		return false;
 	}
 	
+	task = tasks[--back % capacity];
 	lock.unlock();
-	return &tasks[--back % capacity];
+	return true;
 }
