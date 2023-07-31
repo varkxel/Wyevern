@@ -20,6 +20,22 @@ namespace Wyevern::Mathematics
 		static_assert(std::is_arithmetic<type>::value, "Vector must be created with a numeric type.");
 		
 		type raw[dimensions];
+		
+		constexpr explicit Vector(type setAll)
+		{
+			for(uint i = 0; i < dimensions; ++i)
+			{
+				raw[i] = setAll;
+			}
+		}
+		
+		constexpr explicit Vector(type* values)
+		{
+			for(uint i = 0; i < dimensions; ++i)
+			{
+				raw[i] = values[i];
+			}
+		}
 	};
 	
 	template<typename type>
@@ -60,6 +76,91 @@ namespace Wyevern::Mathematics
 		
 		WYEMATHSINTERNAL_DEFINESWIZZLES_VECTOR4(type)
 	};
+	
+	template<typename type, uint dimensions>
+	constexpr Vector<type, dimensions> operator+(Vector<type, dimensions> a, Vector<type, dimensions> b)
+	{
+		Vector<type, dimensions> result;
+		for(uint i = 0; i < dimensions; ++i)
+		{
+			result.raw[i] = a.raw[i] + b.raw[i];
+		}
+		return result;
+	}
+	
+	template<typename type, uint dimensions>
+	constexpr void operator+=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
+	{
+		a = a + b;
+	}
+	
+	template<typename type, uint dimensions>
+	constexpr Vector<type, dimensions> operator-(Vector<type, dimensions> a, Vector<type, dimensions> b)
+	{
+		Vector<type, dimensions> result;
+		for(uint i = 0; i < dimensions; ++i)
+		{
+			result.raw[i] = a.raw[i] - b.raw[i];
+		}
+		return result;
+	}
+	
+	template<typename type, uint dimensions>
+	constexpr void operator-=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
+	{
+		a = a - b;
+	}
+	
+	template<typename type, uint dimensions>
+	constexpr Vector<type, dimensions> operator*(Vector<type, dimensions> a, Vector<type, dimensions> b)
+	{
+		Vector<type, dimensions> result;
+		for(uint i = 0; i < dimensions; ++i)
+		{
+			result.raw[i] = a.raw[i] * b.raw[i];
+		}
+		return result;
+	}
+	
+	template<typename type, uint dimensions>
+	constexpr void operator*=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
+	{
+		a = a * b;
+	}
+	
+	template<typename type, uint dimensions>
+	constexpr Vector<type, dimensions> operator/(Vector<type, dimensions> a, Vector<type, dimensions> b)
+	{
+		Vector<type, dimensions> result;
+		for(uint i = 0; i < dimensions; ++i)
+		{
+			result.raw[i] = a.raw[i] / b.raw[i];
+		}
+		return result;
+	}
+	
+	template<typename type, uint dimensions>
+	constexpr void operator/=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
+	{
+		a = a / b;
+	}
+	
+	template<typename type, uint dimensions>
+	constexpr Vector<type, dimensions> operator%(Vector<type, dimensions> a, Vector<type, dimensions> b)
+	{
+		Vector<type, dimensions> result;
+		for(uint i = 0; i < dimensions; ++i)
+		{
+			result.raw[i] = a.raw[i] % b.raw[i];
+		}
+		return result;
+	}
+	
+	template<typename type, uint dimensions>
+	constexpr void operator%=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
+	{
+		a = a % b;
+	}
 	
 	typedef Vector<int32, 2> int2_32;
 	typedef Vector<int32, 3> int3_32;
