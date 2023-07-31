@@ -24,18 +24,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d172ec13-1324-460d-b8c3-e4b0d448c917" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Wyevern.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JobSystem.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JobSystem.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/meson.build" beforeDir="false" />
-    </list>
+    <list default="true" id="d172ec13-1324-460d-b8c3-e4b0d448c917" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,7 +120,7 @@
       <workItem from="1690470201632" duration="1605000" />
       <workItem from="1690471983140" duration="5369000" />
       <workItem from="1690492287012" duration="11634000" />
-      <workItem from="1690728473373" duration="2767000" />
+      <workItem from="1690728473373" duration="3031000" />
     </task>
     <servers />
   </component>
