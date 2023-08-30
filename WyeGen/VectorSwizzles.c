@@ -1,9 +1,12 @@
+#include "WyeGen.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
+/// \summary Generates a set of permutations for a 4D Vector.
 size_t Permutations(char*** results)
 {
 	const char* baseString = "wwww";
@@ -35,15 +38,18 @@ size_t Permutations(char*** results)
 	return permutations;
 }
 
-void FreePermutations(char** resultsArray, size_t resultsLength)
+/// \summary Frees the given list of permutations from the heap.
+void Permutations_Free(char** array, size_t array_length)
 {
-	for(size_t i = 0; i < resultsLength; ++i)
+	for(size_t i = 0; i < array_length; ++i)
 	{
-		free(resultsArray[i]);
+		free(array[i]);
 	}
-	free(resultsArray);
+	free(array);
 }
 
+/// \summary Trims the given vector down to the given amount of dimensions length.
+/// e.g. XXXX in 2D becomes XX
 size_t TrimTo(char** permList, char*** results, unsigned dimensions)
 {
 	const unsigned perms = (unsigned) powl(4, dimensions);
@@ -61,6 +67,8 @@ size_t TrimTo(char** permList, char*** results, unsigned dimensions)
 	return perms;
 }
 
+/// \summary Trims the given vector down to the given amount of dimensions in characters.
+/// e.g. XYZW in 2D becomes XY
 size_t StripTo(char** permList, size_t permListLength, unsigned dimensions, char*** results)
 {
 	size_t count = 0;
@@ -90,6 +98,7 @@ size_t StripTo(char** permList, size_t permListLength, unsigned dimensions, char
 	return count;
 }
 
+/// \summary Generates the include guard for the destination generated header file.
 void GenerateHeaderGuard(FILE* file, unsigned dimension)
 {
 	const char* comment =
@@ -104,6 +113,7 @@ void GenerateHeaderGuard(FILE* file, unsigned dimension)
 	fprintf(file, "%s\n#ifndef %s\n#define %s\n\n", comment, guardMacro, guardMacro);
 }
 
+/// \summary Ends the generated include guard.
 void EndHeaderGuard(FILE* file)
 {
 	fprintf(file, "#endif\n");

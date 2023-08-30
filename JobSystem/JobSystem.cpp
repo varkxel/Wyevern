@@ -19,3 +19,8 @@ JobSystem::JobSystem(unsigned threads)
 	
 	}
 }
+
+int main()
+{
+
+}

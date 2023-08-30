@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <type_traits>
+#include <functional>
 
 #include "BasicTypes.hpp"
 
@@ -12,6 +13,33 @@
 
 namespace Wyevern::Mathematics
 {
+	template<typename type, uint dimensions>
+	struct Vector;
+	
+	template<typename T, uint dimensions, uint swizzleDimensions>
+	class Swizzle final
+	{
+	private:
+		typedef Vector<T, swizzleDimensions> SwizzleType;
+		typedef Vector<T, dimensions> VectorType;
+	public:
+		constexpr Swizzle
+		(
+			const VectorType& _vector,
+			const std::function<SwizzleType(VectorType&)>& _operation
+		):
+			vector(_vector),
+			operation(_operation)
+		{
+		}
+	
+		const VectorType& vector;
+		const std::function<SwizzleType(VectorType&)> operation;
+	public:
+		operator SwizzleType() const { return operation(vector); } // NOLINT(*-explicit-constructor)
+	};
+	
+	/// \summary n-Dimensional Vector type.
 	template<typename type, uint dimensions>
 	struct Vector
 	{
@@ -36,8 +64,20 @@ namespace Wyevern::Mathematics
 				raw[i] = values[i];
 			}
 		}
+		
+		const Swizzle<type, dimensions, 2> xy = Swizzle<type, dimensions, 2> (
+			this, [] (Vector<type, dimensions> vector) {
+				return Vector<type, 2> { vector.raw[0], vector.raw[1] };
+			}
+		);
+		
+		void Test()
+		{
+			Vector<type, 2> test = xy;
+		}
 	};
 	
+	/// \summary 2D Vector type.
 	template<typename type>
 	struct Vector<type, 2>
 	{
@@ -51,6 +91,7 @@ namespace Wyevern::Mathematics
 		WYEMATHSINTERNAL_DEFINESWIZZLES_VECTOR2(type)
 	};
 	
+	/// \summary 3D Vector type.
 	template<typename type>
 	struct Vector<type, 3>
 	{
@@ -64,6 +105,7 @@ namespace Wyevern::Mathematics
 		WYEMATHSINTERNAL_DEFINESWIZZLES_VECTOR3(type)
 	};
 	
+	/// \summary 4D Vector type.
 	template<typename type>
 	struct Vector<type, 4>
 	{

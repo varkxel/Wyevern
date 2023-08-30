@@ -4,6 +4,7 @@ include(Global.cmake)
 
 project(Wyevern LANGUAGES CXX VERSION ${Wyevern_Version})
 
+add_subdirectory(WyeGen)
 add_subdirectory(WyeMaths)
 
 add_executable(Wyevern JobSystem/JobSystem.cpp)
