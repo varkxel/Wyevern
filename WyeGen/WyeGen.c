@@ -4,7 +4,7 @@
 
 FILE* WyeGen_Header_Create(const char* name, const char* namespace, const char* comment)
 {
-	const size_t filename_bufferSize = 1024;
+	#define filename_bufferSize 1024
 	char filename[filename_bufferSize];
 	snprintf(filename, filename_bufferSize, "%s.gen.hpp", name);
 	
@@ -12,7 +12,7 @@ FILE* WyeGen_Header_Create(const char* name, const char* namespace, const char* 
 	
 	fprintf(file, "\n%s\n", comment);
 	
-	const size_t guardMacroSize = 1024;
+	#define guardMacroSize 1024
 	char guardMacro[guardMacroSize];
 	snprintf(guardMacro, guardMacroSize, "%s_GENERATED_%s_INCLUDED", namespace, name);
 	
@@ -30,6 +30,9 @@ FILE* WyeGen_Header_Create(const char* name, const char* namespace, const char* 
 	fprintf(file, "\n#ifndef %s\n#define %s\n", guardMacro, guardMacro);
 	
 	return file;
+
+	#undef filename_bufferSize
+	#undef guardMacroSize
 }
 
 void WyeGen_Header_End(FILE* file)

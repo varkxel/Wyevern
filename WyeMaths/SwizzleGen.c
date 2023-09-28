@@ -62,7 +62,7 @@ void Swizzles_Generate(SwizzleList* list)
 	
 	for(size_t iSwizzle = 0; iSwizzle < list->swizzles_length; ++iSwizzle)
 	{
-		uint64_t componentIndices[list->components_length];
+		uint64_t* componentIndices = calloc(list->components_length, sizeof(uint64_t));
 		for(unsigned i = 0; i < list->components_length; ++i)
 		{
 			const uint64_t components_npot = SwizzleGen_npot(list->components_length);
@@ -82,6 +82,8 @@ void Swizzles_Generate(SwizzleList* list)
 		{
 			list->swizzles[iSwizzle][i] = list->components[componentIndices[i]];
 		}
+
+		free(componentIndices);
 	}
 }
 
@@ -143,7 +145,13 @@ SwizzleList Permutations_StripComponents(const SwizzleList list, const char* com
 		}
 	}
 	
-	realloc(results.swizzles, sizeof(char*) * results.swizzles_length);
+	char** newSwizzles = realloc(results.swizzles, sizeof(char*) * results.swizzles_length);
+	if(newSwizzles == NULL)
+	{
+		fprintf(stderr, "realloc() returned null in StripComponents method.");
+		return results;
+	}
+	results.swizzles = newSwizzles;
 	
 	return results;
 }
