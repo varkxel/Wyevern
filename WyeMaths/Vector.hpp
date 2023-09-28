@@ -1,209 +1,81 @@
 #ifndef WYEMATHS_VECTOR_INCLUDED
 #define WYEMATHS_VECTOR_INCLUDED
 
-#include <vector>
-#include <type_traits>
+#include <array>
 #include <functional>
+#include <type_traits>
 
 #include "BasicTypes.hpp"
 
-#include "Generated/Vector2.gen.hpp"
-#include "Generated/Vector3.gen.hpp"
-#include "Generated/Vector4.gen.hpp"
+//#include "Generated/Vector2.gen.hpp"
+//#include "Generated/Vector3.gen.hpp"
+//#include "Generated/Vector4.gen.hpp"
 
 namespace Wyevern::Mathematics
 {
-	template<typename type, uint dimensions>
-	struct Vector;
-	
-	template<typename T, uint dimensions, uint swizzleDimensions>
-	class Swizzle final
-	{
-	private:
-		typedef Vector<T, swizzleDimensions> SwizzleType;
-		typedef Vector<T, dimensions> VectorType;
-	public:
-		constexpr Swizzle
-		(
-			const VectorType& _vector,
-			const std::function<SwizzleType(VectorType&)>& _operation
-		):
-			vector(_vector),
-			operation(_operation)
-		{
-		}
-	
-		const VectorType& vector;
-		const std::function<SwizzleType(VectorType&)> operation;
-	public:
-		operator SwizzleType() const { return operation(vector); } // NOLINT(*-explicit-constructor)
-	};
-	
+	template<
+		typename type, uint vectorDimensions,
+		uint swizzleDimensions, std::array<type, swizzleDimensions> order
+	>
+	class Swizzle;
+
 	/// \summary n-Dimensional Vector type.
 	template<typename type, uint dimensions>
-	struct Vector
+	union Vector
 	{
 		// Checks
 		static_assert(dimensions > 0, "Vector cannot have dimensions less or equal to 0. What the hell are you trying to do?!");
-		static_assert(std::is_arithmetic<type>::value, "Vector must be created with a numeric type.");
+		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
 		
-		type raw[dimensions];
+		std::array<type, dimensions> array;
 		
-		constexpr explicit Vector(type setAll)
+		constexpr explicit Vector(const type setAll)
 		{
 			for(uint i = 0; i < dimensions; ++i)
 			{
-				raw[i] = setAll;
+				array[i] = setAll;
 			}
 		}
 		
-		constexpr explicit Vector(type* values)
+		constexpr explicit Vector(std::array<type, dimensions> values)
 		{
 			for(uint i = 0; i < dimensions; ++i)
 			{
-				raw[i] = values[i];
+				array[i] = values[i];
 			}
 		}
-		
-		const Swizzle<type, dimensions, 2> xy = Swizzle<type, dimensions, 2> (
-			this, [] (Vector<type, dimensions> vector) {
-				return Vector<type, 2> { vector.raw[0], vector.raw[1] };
+	};
+
+	template<
+		typename type, uint vectorDimensions,
+		uint swizzleDimensions, std::array<type, swizzleDimensions> order
+	>
+	class Swizzle final
+	{
+	private:
+		std::array<type, vectorDimensions> array;
+
+	public:
+		constexpr operator Vector<type, swizzleDimensions>() const
+		{
+			Vector<type, swizzleDimensions> result;
+			for(uint i = 0; i < swizzleDimensions; ++i)
+			{
+				result[i] = array[order[i]];
 			}
-		);
-		
-		void Test()
+			return result;
+		}
+
+		constexpr Swizzle& operator =(const Vector<type, swizzleDimensions>& vec) const
 		{
-			Vector<type, 2> test = xy;
+			for(uint i = 0; i < swizzleDimensions; ++i)
+			{
+				array[order[i]] = vec[i];
+			}
+			return *this;
 		}
 	};
-	
-	/// \summary 2D Vector type.
-	template<typename type>
-	struct Vector<type, 2>
-	{
-		union
-		{
-			type raw[2];
-			
-			struct { type x, y; };
-		};
-		
-		WYEMATHSINTERNAL_DEFINESWIZZLES_VECTOR2(type)
-	};
-	
-	/// \summary 3D Vector type.
-	template<typename type>
-	struct Vector<type, 3>
-	{
-		union
-		{
-			type raw[3];
-			
-			struct { type x, y, z; };
-		};
-		
-		WYEMATHSINTERNAL_DEFINESWIZZLES_VECTOR3(type)
-	};
-	
-	/// \summary 4D Vector type.
-	template<typename type>
-	struct Vector<type, 4>
-	{
-		union
-		{
-			type raw[4];
-			
-			struct { type x, y, z, w; };
-		};
-		
-		WYEMATHSINTERNAL_DEFINESWIZZLES_VECTOR4(type)
-	};
-	
-	template<typename type, uint dimensions>
-	constexpr Vector<type, dimensions> operator+(Vector<type, dimensions> a, Vector<type, dimensions> b)
-	{
-		Vector<type, dimensions> result;
-		for(uint i = 0; i < dimensions; ++i)
-		{
-			result.raw[i] = a.raw[i] + b.raw[i];
-		}
-		return result;
-	}
-	
-	template<typename type, uint dimensions>
-	constexpr void operator+=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
-	{
-		a = a + b;
-	}
-	
-	template<typename type, uint dimensions>
-	constexpr Vector<type, dimensions> operator-(Vector<type, dimensions> a, Vector<type, dimensions> b)
-	{
-		Vector<type, dimensions> result;
-		for(uint i = 0; i < dimensions; ++i)
-		{
-			result.raw[i] = a.raw[i] - b.raw[i];
-		}
-		return result;
-	}
-	
-	template<typename type, uint dimensions>
-	constexpr void operator-=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
-	{
-		a = a - b;
-	}
-	
-	template<typename type, uint dimensions>
-	constexpr Vector<type, dimensions> operator*(Vector<type, dimensions> a, Vector<type, dimensions> b)
-	{
-		Vector<type, dimensions> result;
-		for(uint i = 0; i < dimensions; ++i)
-		{
-			result.raw[i] = a.raw[i] * b.raw[i];
-		}
-		return result;
-	}
-	
-	template<typename type, uint dimensions>
-	constexpr void operator*=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
-	{
-		a = a * b;
-	}
-	
-	template<typename type, uint dimensions>
-	constexpr Vector<type, dimensions> operator/(Vector<type, dimensions> a, Vector<type, dimensions> b)
-	{
-		Vector<type, dimensions> result;
-		for(uint i = 0; i < dimensions; ++i)
-		{
-			result.raw[i] = a.raw[i] / b.raw[i];
-		}
-		return result;
-	}
-	
-	template<typename type, uint dimensions>
-	constexpr void operator/=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
-	{
-		a = a / b;
-	}
-	
-	template<typename type, uint dimensions>
-	constexpr Vector<type, dimensions> operator%(Vector<type, dimensions> a, Vector<type, dimensions> b)
-	{
-		Vector<type, dimensions> result;
-		for(uint i = 0; i < dimensions; ++i)
-		{
-			result.raw[i] = a.raw[i] % b.raw[i];
-		}
-		return result;
-	}
-	
-	template<typename type, uint dimensions>
-	constexpr void operator%=(Vector<type, dimensions>& a, Vector<type, dimensions> b)
-	{
-		a = a % b;
-	}
-	
+
 	typedef Vector<int32, 2> int2_32;
 	typedef Vector<int32, 3> int3_32;
 	typedef Vector<int32, 4> int4_32;

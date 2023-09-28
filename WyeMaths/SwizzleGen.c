@@ -3,7 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <math.h>
+
+// Swizzle<type, dimensions, 2, {0, 0}> xx;
 
 const char* WyevernNamespace = "WyeMaths";
 const char* WyevernComment = "// == WYEVERN GAME ENGINE == //\n";
@@ -109,12 +112,41 @@ SwizzleList Permutations_TrimTo(const SwizzleList list, const unsigned character
 	}
 	return results;
 }
-/*
+
 SwizzleList Permutations_StripComponents(const SwizzleList list, const char* componentsContain)
 {
 	SwizzleList results;
+	results.components = componentsContain;
+	results.components_length = strlen(componentsContain);
 	
-}*/
+	results.swizzles = malloc(sizeof(char*) * list.swizzles_length);
+	results.swizzles_length = 0;
+	for(size_t iSwizzle = 0; iSwizzle < list.swizzles_length; ++iSwizzle)
+	{
+		for(unsigned i = 0; i < list.components_length; ++i)
+		{
+			bool found = false;
+			
+			const char* componentToCheck = componentsContain;
+			while(*componentToCheck != '\0')
+			{
+				found |= *componentToCheck == list.swizzles[iSwizzle][i];
+				componentToCheck += sizeof(const char);
+			}
+			
+			if(found)
+			{
+				results.swizzles[results.swizzles_length] = calloc(results.components_length + 1, sizeof(char));
+				strncpy(results.swizzles[results.swizzles_length], list.swizzles[iSwizzle], results.components_length);
+				results.swizzles_length += 1;
+			}
+		}
+	}
+	
+	realloc(results.swizzles, sizeof(char*) * results.swizzles_length);
+	
+	return results;
+}
 
 int main()
 {
