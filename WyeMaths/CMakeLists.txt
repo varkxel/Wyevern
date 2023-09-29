@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.25)
 
 include(../Global.cmake)
 
-project(WyeMaths LANGUAGES C CXX VERSION ${Wyevern_Version})
+project(WyeMaths LANGUAGES CXX VERSION ${Wyevern_Version})
 
-set(WyeMaths_SwizzleGen_Src SwizzleGen.c)
+set(WyeMaths_SwizzleGen_Src SwizzleGen.cpp)
 add_executable(WyeMaths_SwizzleGen ${WyeMaths_SwizzleGen_Src})
 target_link_libraries(WyeMaths_SwizzleGen PRIVATE WyeGen)
 target_include_directories(WyeMaths_SwizzleGen PRIVATE ${WyeGen_SOURCE_DIR})
@@ -15,7 +15,7 @@ add_custom_target(WyeMaths_SwizzleGen_Run
 	SOURCES ${WyeMaths_SwizzleGen_Src}
 )
 
-add_library(WyeMaths BasicTypes.hpp Vector.hpp)
+add_library(WyeMaths BasicTypes.hpp Vector.hpp Dummy.cpp)
 
 add_dependencies(WyeMaths WyeMaths_SwizzleGen_Run)
 
