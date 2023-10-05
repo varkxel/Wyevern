@@ -4,7 +4,7 @@
 
 using namespace Wyevern;
 
-WyeGen::WyeGen(const char* path)
+WyeGen::WyeGen(const std::string& path)
 {
 	file.open(path);
 }
@@ -14,13 +14,13 @@ WyeGen::~WyeGen()
 	file.close();
 }
 
-void InsertOnCharacter(std::string& comment, const char character, const char* string)
+void InsertOnCharacter(std::string& comment, const char character, const char* string, long long int offset = 1)
 {
 	for (std::size_t i = 0; i < comment.length(); ++i)
 	{
 		if (comment[i] == character)
 		{
-			comment.insert(i + 1, string);
+			comment.insert(i + offset, string);
 		}
 	}
 }
@@ -42,4 +42,41 @@ void WyeGen::Comment_Multiline(std::string comment)
 	comment.insert(comment.length(), "\n*/");
 
 	file << comment << std::endl;
+}
+
+void WyeGen::Space(int lines)
+{
+	for(int i = 0; i < lines - 1; ++i)
+	{
+		file << "\n";
+	}
+	file << std::endl;
+}
+
+void WyeGen::Macro_Define(const std::string& name, std::string value)
+{
+	file << "#define " << name;
+	if(!value.empty())
+	{
+		InsertOnCharacter(value, '\n', "\\", -1);
+		file << " " << value;
+	}
+	file << std::endl;
+}
+
+void WyeGen::Macro_IfDefined(const std::string& macro)
+{
+	file << "#ifdef ";
+	file << macro << std::endl;
+}
+
+void WyeGen::Macro_IfDefined_Not(const std::string& macro)
+{
+	file << "#ifndef ";
+	file << macro << std::endl;
+}
+
+void WyeGen::Macro_IfDefined_End()
+{
+	file << "#endif" << std::endl;
 }
