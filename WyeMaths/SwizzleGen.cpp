@@ -5,11 +5,9 @@
 using Wyevern::WyeGen;
 using std::size_t;
 
-std::vector<std::string> Permutations(const std::string& components, const unsigned maxDimensions)
+std::vector<std::vector<size_t>> Permutations(const unsigned componentsSize, const unsigned maxDimensions)
 {
-	const size_t componentsSize = components.size();
-
-	std::vector<std::string> results;
+	std::vector<std::vector<size_t>> results;
 
 	for(unsigned dimensions = 1; dimensions <= maxDimensions; ++dimensions)
 	{
@@ -22,7 +20,7 @@ std::vector<std::string> Permutations(const std::string& components, const unsig
 
 		for(size_t permutation = 0; permutation < permutations; ++permutation)
 		{
-			std::string result;
+			std::vector<size_t> result;
 
 			for(unsigned index = 0; index < dimensions; ++index)
 			{
@@ -34,7 +32,7 @@ std::vector<std::string> Permutations(const std::string& components, const unsig
 				}
 
 				const size_t componentIndex = (permutation / divisor) % componentsSize;
-				result.push_back(components[componentIndex]);
+				result.push_back(componentIndex);
 			}
 			results.push_back(result);
 		}
@@ -47,16 +45,10 @@ std::vector<std::string> Permutations(const std::string& components, const unsig
 
 int main()
 {
-	std::vector<std::string> swizzles = Permutations("xyzw", 4);
-	for (const auto& swizzle : swizzles)
-	{
-		std::cout << swizzle << std::endl;
-	}
-#if 0
 	for(int vectorIndex = 2; vectorIndex <= 4; ++vectorIndex)
 	{
 		const std::string vectorIndexString = std::to_string(vectorIndex);
-		const std::string filename = "Vector" + vectorIndexString + ".hpp";
+		const std::string filename = "Vector" + vectorIndexString + ".gen.hpp";
 
 		WyeGen vector(filename);
 		vector.Comment_Multiline
@@ -72,7 +64,34 @@ int main()
 		vector.Macro_Define(guard);
 		vector.Space();
 
+		const std::string baseDefinition_prefix = "Swizzle<type, " + std::to_string(vectorIndex) + ", { ";
+
+		std::string results;
+		for
+		(
+			std::vector<std::vector<size_t>> permutations = Permutations(vectorIndex, 4);
+			const std::vector<size_t>& perm : permutations
+		)
+		{
+			constexpr auto xyzw = "xyzw";
+
+			std::string swizzleIndices;
+
+			std::string xyzwName;
+			
+			for(auto i : perm)
+			{
+				xyzwName.push_back(xyzw[i]);
+				
+				swizzleIndices += std::to_string(i) + ", ";
+			}
+
+			std::string definition = "\nSwizzle<type, " + vectorIndexString + ", " + std::to_string(perm.size()) + ", std::array<std::size_t, " + std::to_string(perm.size()) + "> { " + swizzleIndices + "}> " + xyzwName + ";";
+			results.append(definition);
+		}
+		vector.Macro_Define("WYEMATHS_GENERATED_VECTOR" + vectorIndexString + "_SWIZZLES", results);
+
+		vector.Space();
 		vector.Macro_IfDefined_End();
 	}
-#endif
 }

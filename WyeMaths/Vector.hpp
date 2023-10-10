@@ -4,21 +4,40 @@
 #include <array>
 #include <functional>
 #include <type_traits>
+#include <cstdint>
 
 #include "BasicTypes.hpp"
 
-//#include "Generated/Vector2.gen.hpp"
-//#include "Generated/Vector3.gen.hpp"
-//#include "Generated/Vector4.gen.hpp"
+#include "Generated/Vector2.gen.hpp"
+#include "Generated/Vector3.gen.hpp"
+#include "Generated/Vector4.gen.hpp"
+
+#define WYEMATHS_VECTOR_DEFINE_ARRAY(type, dimensions, name) \
+	std::array<type, (dimensions)> name;
+
+#define WYEMATHS_VECTOR_DEFINE_INDEXOP(type, array) \
+	constexpr const type& operator[](const std::size_t index) const { return array[index]; } \
+	constexpr type& operator[](const std::size_t index) { return array[index]; }
+
+#define WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, dimensions) \
+	constexpr explicit Vector(const type setAll) \
+	{ \
+		for(uint i = 0; i < (dimensions); ++i) \
+		{ \
+			array[i] = setAll; \
+		} \
+	} \
+	constexpr explicit Vector(std::array<type, (dimensions)> values) \
+	{ \
+		for(uint i = 0; i < (dimensions); ++i) \
+		{ \
+			array[i] = values[i]; \
+		} \
+	} \
+	constexpr Vector() = default;
 
 namespace Wyevern::Mathematics
 {
-	template<
-		typename type, uint vectorDimensions,
-		uint swizzleDimensions, std::array<type, swizzleDimensions> order
-	>
-	class Swizzle;
-
 	/// \summary n-Dimensional Vector type.
 	template<typename type, uint dimensions>
 	union Vector
@@ -27,28 +46,16 @@ namespace Wyevern::Mathematics
 		static_assert(dimensions > 0, "Vector cannot have dimensions less or equal to 0. What the hell are you trying to do?!");
 		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
 		
-		std::array<type, dimensions> array;
-		
-		constexpr explicit Vector(const type setAll)
-		{
-			for(uint i = 0; i < dimensions; ++i)
-			{
-				array[i] = setAll;
-			}
-		}
-		
-		constexpr explicit Vector(std::array<type, dimensions> values)
-		{
-			for(uint i = 0; i < dimensions; ++i)
-			{
-				array[i] = values[i];
-			}
-		}
+		WYEMATHS_VECTOR_DEFINE_ARRAY(type, dimensions, array);
+
+		WYEMATHS_VECTOR_DEFINE_INDEXOP(type, array);
+
+		WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, dimensions);
 	};
 
 	template<
 		typename type, uint vectorDimensions,
-		uint swizzleDimensions, std::array<type, swizzleDimensions> order
+		uint swizzleDimensions, std::array<std::size_t, swizzleDimensions> order
 	>
 	class Swizzle final
 	{
@@ -74,6 +81,51 @@ namespace Wyevern::Mathematics
 			}
 			return *this;
 		}
+	};
+
+	template<typename type>
+	union Vector<type, 2>
+	{
+		// Checks
+		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
+
+		WYEMATHS_VECTOR_DEFINE_ARRAY(type, 2, array);
+
+		WYEMATHS_VECTOR_DEFINE_INDEXOP(type, array);
+
+		WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, 2);
+
+		WYEMATHS_GENERATED_VECTOR2_SWIZZLES;
+	};
+
+	template<typename type>
+	union Vector<type, 3>
+	{
+		// Checks
+		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
+
+		WYEMATHS_VECTOR_DEFINE_ARRAY(type, 3, array);
+
+		WYEMATHS_VECTOR_DEFINE_INDEXOP(type, array);
+
+		WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, 3);
+
+		WYEMATHS_GENERATED_VECTOR3_SWIZZLES;
+	};
+
+	template<typename type>
+	union Vector<type, 4>
+	{
+		// Checks
+		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
+
+		WYEMATHS_VECTOR_DEFINE_ARRAY(type, 4, array);
+
+		WYEMATHS_VECTOR_DEFINE_INDEXOP(type, array);
+
+		WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, 4);
+
+		WYEMATHS_GENERATED_VECTOR3_SWIZZLES;
 	};
 
 	typedef Vector<int32, 2> int2_32;

@@ -14,13 +14,14 @@ WyeGen::~WyeGen()
 	file.close();
 }
 
-void InsertOnCharacter(std::string& comment, const char character, const char* string, long long int offset = 1)
+void InsertOnCharacter(std::string& comment, const char character, const std::string& string, long long int offset = 1)
 {
 	for (std::size_t i = 0; i < comment.length(); ++i)
 	{
 		if (comment[i] == character)
 		{
-			comment.insert(i + offset, string);
+			comment.insert(i += offset, string);
+			i += string.size();
 		}
 	}
 }
@@ -58,7 +59,8 @@ void WyeGen::Macro_Define(const std::string& name, std::string value)
 	file << "#define " << name;
 	if(!value.empty())
 	{
-		InsertOnCharacter(value, '\n', "\\", -1);
+		InsertOnCharacter(value, '\n', "\t\\", 0);
+		InsertOnCharacter(value, '\n', "\t", 1);
 		file << " " << value;
 	}
 	file << std::endl;
@@ -79,4 +81,9 @@ void WyeGen::Macro_IfDefined_Not(const std::string& macro)
 void WyeGen::Macro_IfDefined_End()
 {
 	file << "#endif" << std::endl;
+}
+
+void WyeGen::Raw(const std::string& line)
+{
+	file << line << std::endl;
 }

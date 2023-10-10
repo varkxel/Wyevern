@@ -24,6 +24,8 @@ namespace Wyevern
 		void Macro_IfDefined(const std::string& macro);
 		void Macro_IfDefined_Not(const std::string& macro);
 		void Macro_IfDefined_End();
+
+		void Raw(const std::string& line);
 	};
 }
 
