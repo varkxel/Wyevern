@@ -41,8 +41,6 @@ std::vector<std::vector<size_t>> Permutations(const unsigned componentsSize, con
 	return results;
 }
 
-#include <iostream>
-
 int main()
 {
 	for(int vectorIndex = 2; vectorIndex <= 4; ++vectorIndex)
