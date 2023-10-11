@@ -73,7 +73,7 @@ namespace Wyevern::Mathematics
 			return result;
 		}
 
-		constexpr Swizzle& operator =(const Vector<type, swizzleDimensions>& vec) const
+		constexpr Swizzle& operator =(const Vector<type, swizzleDimensions>& vec)
 		{
 			for(uint i = 0; i < swizzleDimensions; ++i)
 			{
@@ -98,7 +98,7 @@ namespace Wyevern::Mathematics
 			return array[order[0]];
 		}
 
-		constexpr Swizzle& operator =(type toSet) const
+		constexpr Swizzle& operator =(type toSet)
 		{
 			array[order[0]] = toSet;
 			return *this;
@@ -147,7 +147,7 @@ namespace Wyevern::Mathematics
 
 		WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, 4);
 
-		WYEMATHS_GENERATED_VECTOR3_SWIZZLES;
+		WYEMATHS_GENERATED_VECTOR4_SWIZZLES;
 	};
 
 	typedef Vector<int32, 2> int2_32;

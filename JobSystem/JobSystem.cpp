@@ -20,7 +20,19 @@ JobSystem::JobSystem(unsigned threads)
 	}
 }
 
+#include <Vector.hpp>
+#include <iostream>
+#include <string>
+
 int main()
 {
+	using namespace Wyevern::Mathematics;
+	int2 testVec(std::array{ 1, 0 });
+	int2 reverse = testVec.yx;
 
+	int4 test = reverse.xyxy;
+
+	test.yz = int2(300);
+
+	std::cout << std::to_string(test.y) << std::endl;
 }
