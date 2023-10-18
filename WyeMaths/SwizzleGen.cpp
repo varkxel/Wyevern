@@ -1,6 +1,7 @@
 #include <WyeGen.hpp>
 
 #include <vector>
+#include <string>
 
 using Wyevern::WyeGen;
 using std::size_t;
@@ -72,20 +73,37 @@ int main()
 		)
 		{
 			constexpr auto xyzw = "xyzw";
+			constexpr auto rgba = "rgba";
 
-			std::string swizzleIndices;
-
-			std::string xyzwName;
-			
-			for(auto i : perm)
+			if(perm.size() == 1)
 			{
-				xyzwName.push_back(xyzw[i]);
-				
-				swizzleIndices += std::to_string(i) + ", ";
-			}
+				for(const size_t& i : perm)
+				{
+					std::string definition = "\nSwizzle1D<type, " + vectorIndexString + ", ";
+					definition += std::to_string(i);
+					definition += "> ";
+					definition.push_back(xyzw[i]);
+					definition.push_back(';');
 
-			std::string definition = "\nSwizzle<type, " + vectorIndexString + ", " + std::to_string(perm.size()) + ", std::array<std::size_t, " + std::to_string(perm.size()) + "> { " + swizzleIndices + "}> " + xyzwName + ";";
-			results.append(definition);
+					results.append(definition);
+				}
+			}
+			else
+			{
+				std::string swizzleIndices;
+
+				std::string xyzwName;
+
+				for(const size_t& i : perm)
+				{
+					xyzwName.push_back(xyzw[i]);
+
+					swizzleIndices += std::to_string(i) + ", ";
+				}
+
+				std::string definition = "\nSwizzle<type, " + vectorIndexString + ", " + std::to_string(perm.size()) + ", std::array<std::size_t, " + std::to_string(perm.size()) + "> { " + swizzleIndices + "}> " + xyzwName + ";";
+				results.append(definition);
+			}
 		}
 		vector.Macro_Define("WYEMATHS_GENERATED_VECTOR" + vectorIndexString + "_SWIZZLES", results);
 

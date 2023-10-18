@@ -6,8 +6,8 @@ project(WyeMaths LANGUAGES CXX VERSION ${Wyevern_Version})
 
 set(WyeMaths_SwizzleGen_Src SwizzleGen.cpp)
 add_executable(WyeMaths_SwizzleGen ${WyeMaths_SwizzleGen_Src})
-target_link_libraries(WyeMaths_SwizzleGen PRIVATE WyeGen)
 target_include_directories(WyeMaths_SwizzleGen PRIVATE ${WyeGen_SOURCE_DIR})
+target_link_libraries(WyeMaths_SwizzleGen PRIVATE WyeGen)
 
 add_custom_target(WyeMaths_SwizzleGen_Run
 	COMMAND WyeMaths_SwizzleGen

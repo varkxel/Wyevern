@@ -10,4 +10,4 @@ add_subdirectory(WyeMaths)
 add_executable(Wyevern JobSystem/JobSystem.cpp)
 
 target_link_libraries(Wyevern PUBLIC WyeMaths)
-target_include_directories(Wyevern PUBLIC WyeMaths)
+target_include_directories(Wyevern PUBLIC ${WyeMaths_SOURCE_DIR})

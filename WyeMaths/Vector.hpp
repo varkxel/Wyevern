@@ -83,26 +83,15 @@ namespace Wyevern::Mathematics
 		}
 	};
 
-	template<
-		typename type, uint vectorDimensions,
-		std::array<std::size_t, 1> order
-	>
-	class Swizzle<type, vectorDimensions, 1, order> final
+	template<typename type, uint vectorDimensions, uint swizzleComponent>
+	class Swizzle1D final
 	{
 	private:
 		std::array<type, vectorDimensions> array;
 
 	public:
-		constexpr operator type() const
-		{
-			return array[order[0]];
-		}
-
-		constexpr Swizzle& operator =(type toSet)
-		{
-			array[order[0]] = toSet;
-			return *this;
-		}
+		constexpr operator type&() { return array[swizzleComponent]; }
+		constexpr operator const type&() const { return array[swizzleComponent]; }
 	};
 
 	template<typename type>
