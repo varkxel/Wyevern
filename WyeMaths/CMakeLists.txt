@@ -15,7 +15,7 @@ add_custom_target(WyeMaths_SwizzleGen_Run
 	SOURCES ${WyeMaths_SwizzleGen_Src}
 )
 
-add_library(WyeMaths BasicTypes.hpp Vector.hpp Dummy.cpp)
+add_library(WyeMaths BasicTypes.hpp Vector.hpp VectorArray.hpp Dummy.cpp)
 
 add_dependencies(WyeMaths WyeMaths_SwizzleGen_Run)
 
