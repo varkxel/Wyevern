@@ -45,6 +45,24 @@ namespace Wyevern::Mathematics
 			}
 			return result;
 		}
+
+		explicit operator std::vector<Vector<type, dimensions>>() const
+		{
+			const std::size_t size = components[0].size();
+
+			std::vector<Vector<type, dimensions>> results;
+			results.reserve(size);
+			for(std::size_t i = 0; i < size; ++i)
+			{
+				Vector<type, dimensions> vec;
+				for(uint dim = 0; dim < dimensions; ++dim)
+				{
+					vec[dim] = components[dim][i];
+				}
+				results.push_back(vec);
+			}
+			return results;
+		}
 	};
 
 	template<typename type, uint dimensions>
