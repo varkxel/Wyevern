@@ -7,7 +7,10 @@ namespace Wyevern
 	{
 	public:
 		explicit JobSystem(unsigned threads = 0u);
+
 	private:
+		void WorkerThread();
+
 		unsigned threads;
 	};
 }

@@ -1,5 +1,6 @@
 #include "JobSystem.hpp"
 
+#include <algorithm>
 #include <thread>
 
 using namespace Wyevern;
@@ -16,6 +17,15 @@ JobSystem::JobSystem(unsigned threads)
 	
 	for(unsigned threadID = 0; threadID < threads; ++threadID)
 	{
-	
+		std::thread worker(WorkerThread);
+
+	}
+}
+
+void JobSystem::WorkerThread()
+{
+	while(true)
+	{
+
 	}
 }
