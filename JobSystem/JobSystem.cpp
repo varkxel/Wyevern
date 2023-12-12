@@ -1,11 +1,10 @@
 #include "JobSystem.hpp"
 
 #include <algorithm>
-#include <thread>
 
 using namespace Wyevern;
 
-JobSystem::JobSystem(unsigned threads)
+JobSystem::JobSystem(unsigned threadCount)
 {
 	const unsigned coreCount = std::thread::hardware_concurrency();
 	
@@ -13,12 +12,16 @@ JobSystem::JobSystem(unsigned threads)
 	const unsigned targetThreads = std::max(1u, coreCount - 1);
 	
 	// Cap the thread count to the max threads given, if it is given.
-	threads = (threads > 0) ? std::min(targetThreads, threads) : targetThreads;
-	
-	for(unsigned threadID = 0; threadID < threads; ++threadID)
-	{
-		std::thread worker(WorkerThread);
+	threadCount = (threadCount > 0) ? std::min(targetThreads, threadCount) : targetThreads;
+	this->threadCount = threadCount;
 
+	// Initialise the worker threads
+	threads.reserve(this->threadCount);
+	for(unsigned threadID = 0; threadID < this->threadCount; ++threadID)
+	{
+		std::thread worker = std::thread(WorkerThread);
+		worker.detach();
+		threads.push_back(std::move(worker));
 	}
 }
 
@@ -26,6 +29,6 @@ void JobSystem::WorkerThread()
 {
 	while(true)
 	{
-
+		
 	}
 }
