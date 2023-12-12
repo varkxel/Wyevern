@@ -16,18 +16,29 @@ namespace Wyevern
 		explicit JobSystem(unsigned threads = 0u);
 
 	private:
-		struct JobData
+		struct
+			alignas(std::hardware_constructive_interference_size)
+			JobData
 		{
+			/// <summary>
+			/// The job function to call.
+			/// </summary>
 			std::function<void()> function;
-			std::optional<std::shared_ptr<JobData>> parent;
 
+			/// <summary>
+			/// Job data stored here.
+			/// </summary>
+			std::any data;
+
+			/// <summary>
+			/// The job which is this job's parent.
+			/// </summary>
+			std::optional<std::shared_ptr<JobData>> parent;
+			
 			/// <summary>
 			/// The amount of unfinished children this job has.
 			/// </summary>
 			std::atomic_int children;
-
-			alignas(std::hardware_constructive_interference_size)
-			std::any data;
 		};
 		static void WorkerThread();
 
