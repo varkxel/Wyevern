@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-using namespace Wyevern;
+using namespace Wyevern::Jobs;
 
 JobSystem::JobSystem(unsigned threadCount)
 {
@@ -19,9 +19,9 @@ JobSystem::JobSystem(unsigned threadCount)
 	threads.reserve(this->threadCount);
 	for(unsigned threadID = 0; threadID < this->threadCount; ++threadID)
 	{
-		std::thread worker = std::thread(WorkerThread);
-		worker.detach();
-		threads.push_back(std::move(worker));
+		threads.push_back(std::thread(WorkerThread));
+		std::thread& thread = threads.back();
+		thread.detach();
 	}
 }
 

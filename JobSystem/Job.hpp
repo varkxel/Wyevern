@@ -1,7 +1,7 @@
 #ifndef WYEVERN_JOB_INCLUDED
 #define WYEVERN_JOB_INCLUDED
 
-namespace Wyevern
+namespace Wyevern::Jobs
 {
 	struct Job
 	{
