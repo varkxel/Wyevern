@@ -5,6 +5,7 @@
 # VS
 # ==
 .vs/
+CMakeSettings.json
 
 # Temporary Resharper bodge
 .idea/
