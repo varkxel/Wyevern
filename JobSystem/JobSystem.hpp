@@ -38,7 +38,7 @@ namespace Wyevern
 		explicit JobSystem(unsigned threads = 0u);
 
 		template<typename JobType>
-		std::shared_ptr<JobHandle> Schedule(const Job& job, std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt)
+		std::shared_ptr<JobHandle> Schedule(const JobType& job, std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt)
 		{
 			std::shared_ptr<JobSystem::JobHandle> handle = std::make_shared<JobSystem::JobHandle>();
 			if (parent.has_value())
@@ -50,6 +50,7 @@ namespace Wyevern
 			handle->data = std::make_unique<JobType>(job);
 			return handle;
 		}
+
 	private:
 		/// <summary>
 		/// Function that runs in each worker thread.
