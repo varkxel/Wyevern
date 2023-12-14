@@ -12,9 +12,7 @@
 
 namespace Wyevern::Jobs
 {
-	struct
-		// Prevent false sharing.
-		JobHandle
+	struct JobHandle
 	{
 	public:
 		template<typename JobType>
@@ -26,7 +24,7 @@ namespace Wyevern::Jobs
 				++(parent.value()->unfinished);
 			}
 			this->parent = parent;
-			this->job.dataPtr = std::make_unique<Job>(job);
+			data = DataContainer(job);
 		}
 
 		/// <summary>
@@ -37,18 +35,18 @@ namespace Wyevern::Jobs
 		/// <summary>
 		/// The amount of unfinished children this job has, plus itself.
 		/// </summary>
-		std::atomic_int unfinished;
+		std::atomic_llong unfinished;
 
 		union DataContainer
 		{
 			friend struct JobHandle;
 		private:
-			static constexpr auto Size = Wyevern::Architecture::FalseSharingMitigation
-				- sizeof(std::optional<std::shared_ptr<JobHandle>>)
-				- sizeof(std::atomic_int);
+			static constexpr auto PaddingSize = Wyevern::Architecture::FalseSharingMitigation
+				- sizeof(parent)
+				- sizeof(unfinished);
 
 			std::unique_ptr<Job> reference;
-			std::array<std::byte, Size> data;
+			std::array<std::byte, PaddingSize> data;
 		public:
 			template<typename JobType>
 			explicit DataContainer(const JobType& job)
