@@ -1,11 +1,17 @@
 # Wyevern
 # =======
 *.gen.hpp
+*.gen.cpp
 
 # VS
 # ==
 .vs/
 CMakeSettings.json
+
+# VSCode
+# ======
+.vscode/
+build/
 
 # Temporary Resharper bodge
 .idea/
