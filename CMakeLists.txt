@@ -13,6 +13,9 @@ add_subdirectory(WyeMaths)
 
 add_executable(Wyevern "Instance.cpp" "Window.cpp" "JobSystem/JobSystem.cpp")
 
+# Include base folder
+target_include_directories(Wyevern PUBLIC ${Wyevern_SOURCE_DIR})
+
 target_link_libraries(Wyevern PRIVATE SDL2)
 target_include_directories(Wyevern PRIVATE ${SDL2_INCLUDE_DIRS})
 
