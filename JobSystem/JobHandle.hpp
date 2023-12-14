@@ -39,22 +39,24 @@ namespace Wyevern::Jobs
 		/// </summary>
 		std::atomic_int unfinished;
 
-		/// <summary>
-		/// Job data/function pointer.
-		/// </summary>
-		union
+		union DataContainer
 		{
 			friend struct JobHandle;
 		private:
-			std::unique_ptr<Job> dataPtr;
-			std::array<
-				std::byte,
-				Wyevern::Architecture::FalseSharingMitigation
-					- sizeof(std::optional<std::shared_ptr<JobHandle>>)
-					- sizeof(std::atomic_int)
-			> data;
-		}
-		job;
+			static constexpr auto Size = Wyevern::Architecture::FalseSharingMitigation
+				- sizeof(std::optional<std::shared_ptr<JobHandle>>)
+				- sizeof(std::atomic_int);
+
+			std::unique_ptr<Job> reference;
+			std::array<std::byte, Size> data;
+		public:
+			template<typename JobType>
+			explicit DataContainer(const JobType& job)
+			{
+				
+			}
+		};
+		DataContainer data;
 	};
 }
 

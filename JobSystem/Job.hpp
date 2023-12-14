@@ -5,6 +5,8 @@ namespace Wyevern::Jobs
 {
 	struct Job
 	{
+		virtual ~Job() {}
+
 		virtual void Execute() = 0;
 	};
 }
