@@ -19,14 +19,8 @@ namespace Wyevern::Jobs
 		template<typename JobType>
 		std::shared_ptr<JobHandle> Schedule(const JobType& job, std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt)
 		{
-			std::shared_ptr<JobHandle> handle = std::make_shared<JobHandle>();
-			if (parent.has_value())
-			{
-				++(parent.value()->children);
-			}
-			handle->parent = parent;
-			handle->children = 0;
-			handle->data = std::make_unique<JobType>(job);
+			std::shared_ptr<JobHandle> handle = std::make_shared<JobHandle>(job, parent);
+			
 			return handle;
 		}
 
