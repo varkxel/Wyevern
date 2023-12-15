@@ -28,14 +28,14 @@ namespace Wyevern::Jobs
 		}
 
 		/// <summary>
-		/// The job which is this job's parent.
-		/// </summary>
-		std::optional<std::shared_ptr<JobHandle>> parent;
-
-		/// <summary>
 		/// The amount of unfinished children this job has, plus itself.
 		/// </summary>
 		std::atomic_llong unfinished;
+
+		/// <summary>
+		/// The job which is this job's parent.
+		/// </summary>
+		std::optional<std::shared_ptr<JobHandle>> parent;
 
 		union DataContainer
 		{

@@ -11,7 +11,7 @@ set(SDL2_INCLUDE_DIRS "${SDL2_BINARY_DIR}/include")
 add_subdirectory(WyeGen)
 add_subdirectory(WyeMaths)
 
-add_executable(Wyevern "Instance.cpp" "Window.cpp" "JobSystem/JobSystem.cpp")
+add_executable(Wyevern "Instance.cpp" "Window.cpp" "JobSystem/JobSystem.cpp" "JobSystem/JobSystem.hpp" "JobSystem/JobHandle.hpp" "JobSystem/JobQueue.hpp" "JobSystem/Job.hpp")
 
 # Include base folder
 target_include_directories(Wyevern PUBLIC ${Wyevern_SOURCE_DIR})
