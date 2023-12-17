@@ -7,6 +7,7 @@
 
 #include <atomic>
 #include <array>
+#include <bit>
 #include <memory>
 #include <optional>
 
