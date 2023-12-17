@@ -16,7 +16,7 @@ namespace Wyevern::Jobs
 	{
 	public:
 		template<typename JobType>
-		JobHandle(const JobType& job, std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt)
+		JobHandle(const JobType& job, std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt) : data(job)
 		{
 			this->unfinished = 1;
 			if (parent.has_value())
@@ -24,7 +24,6 @@ namespace Wyevern::Jobs
 				++(parent.value()->unfinished);
 			}
 			this->parent = parent;
-			data = DataContainer(job);
 		}
 
 		/// <summary>
@@ -49,9 +48,24 @@ namespace Wyevern::Jobs
 			std::array<std::byte, PaddingSize> data;
 		public:
 			template<typename JobType>
+			static constexpr bool IsStoredLocally()
+			{
+				return sizeof(JobType) <= PaddingSize;
+			}
+
+			template<typename JobType>
 			explicit DataContainer(const JobType& job)
 			{
-				
+				if constexpr(IsStoredLocally<JobType>())
+				{
+					// Can store data in the job struct
+					data = std::bit_cast<std::array<std::byte, PaddingSize>>(job);
+				}
+				else
+				{
+					// Cannot store the data in the job struct, store a pointer to it instead.
+					reference = std::make_unique<JobType>(job);
+				}
 			}
 		};
 		DataContainer data;
