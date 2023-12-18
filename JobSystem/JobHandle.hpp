@@ -68,6 +68,21 @@ namespace Wyevern::Jobs
 					reference = std::make_unique<JobType>(job);
 				}
 			}
+
+			template<typename JobType>
+			JobType& Get()
+			{
+				if constexpr(IsStoredLocally<JobType>())
+				{
+					// Data is in the job struct
+					return reinterpret_cast<JobType&>(&data);
+				}
+				else
+				{
+					// Data is in the pointer
+					return dynamic_cast<JobType&>(reference.get());
+				}
+			}
 		};
 		DataContainer data;
 	};
