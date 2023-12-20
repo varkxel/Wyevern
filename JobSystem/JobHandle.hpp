@@ -15,17 +15,26 @@ namespace Wyevern::Jobs
 {
 	struct JobHandle
 	{
-	public:
 		template<typename JobType>
-		JobHandle(const JobType& job, std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt) : data(job)
+		JobHandle
+		(
+			const JobType& job,
+			std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt
+		):
+			data(job),
+			unfinished(1)
 		{
-			this->unfinished = 1;
-			if (parent.has_value())
+			if(parent.has_value())
 			{
 				++(parent.value()->unfinished);
 			}
 			this->parent = parent;
 		}
+
+		JobHandle();
+		JobHandle(const JobHandle& other);
+		JobHandle& operator=(const JobHandle& other);
+		virtual ~JobHandle() {}
 
 		/// <summary>
 		/// The amount of unfinished children this job has, plus itself.
@@ -53,6 +62,11 @@ namespace Wyevern::Jobs
 			{
 				return sizeof(JobType) <= PaddingSize;
 			}
+
+			DataContainer();
+			DataContainer(const DataContainer& other);
+			DataContainer& operator=(const DataContainer& other);
+			~DataContainer() {}
 
 			template<typename JobType>
 			explicit DataContainer(const JobType& job)
@@ -83,6 +97,8 @@ namespace Wyevern::Jobs
 					return dynamic_cast<JobType&>(reference.get());
 				}
 			}
+		private:
+			static void CopyOpImpl(const DataContainer& src, DataContainer& dest);
 		};
 		DataContainer data;
 	};
