@@ -1,10 +1,14 @@
+// The operators in this file are meant to be implicit.
+// This is what allows the swizzles to act like vectors.
+// ReSharper disable CppNonExplicitConversionOperator
+
 #ifndef WYEMATHS_VECTOR_INCLUDED
 #define WYEMATHS_VECTOR_INCLUDED
 
+#include <cstdint>
 #include <array>
 #include <functional>
 #include <type_traits>
-#include <cstdint>
 
 #include "BasicTypes.hpp"
 
@@ -20,28 +24,22 @@
 	constexpr type& operator[](const std::size_t index) { return array[index]; }
 
 #define WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, dimensions) \
-	constexpr explicit Vector(const type setAll) \
-	{ \
-		for(uint i = 0; i < (dimensions); ++i) \
-		{ \
+	constexpr explicit Vector(const type setAll) { \
+		for(uint i = 0; i < (dimensions); ++i) { \
 			array[i] = setAll; \
 		} \
 	} \
-	constexpr explicit Vector(std::array<type, (dimensions)> values) \
-	{ \
-		for(uint i = 0; i < (dimensions); ++i) \
-		{ \
+	constexpr explicit Vector(std::array<type, (dimensions)> values) { \
+		for(uint i = 0; i < (dimensions); ++i) { \
 			array[i] = values[i]; \
 		} \
 	} \
 	constexpr Vector() = default;
 
-namespace Wyevern::Mathematics
-{
+namespace Wyevern::Mathematics {
 	/// \summary n-Dimensional Vector type.
 	template<typename type, uint dimensions>
-	union Vector
-	{
+	union Vector {
 		// Checks
 		static_assert(dimensions > 0, "Vector cannot have dimensions less or equal to 0. What the hell are you trying to do?!");
 		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
@@ -57,26 +55,22 @@ namespace Wyevern::Mathematics
 		typename type, uint vectorDimensions,
 		uint swizzleDimensions, std::array<std::size_t, swizzleDimensions> order
 	>
-	class Swizzle final
-	{
+	class Swizzle final {
 	private:
 		std::array<type, vectorDimensions> array;
 
 	public:
-		constexpr operator Vector<type, swizzleDimensions>() const
-		{
+
+		constexpr operator Vector<type, swizzleDimensions>() const {
 			Vector<type, swizzleDimensions> result;
-			for(uint i = 0; i < swizzleDimensions; ++i)
-			{
+			for(uint i = 0; i < swizzleDimensions; ++i) {
 				result[i] = array[order[i]];
 			}
 			return result;
 		}
 
-		constexpr Swizzle& operator =(const Vector<type, swizzleDimensions>& vec)
-		{
-			for(uint i = 0; i < swizzleDimensions; ++i)
-			{
+		constexpr Swizzle& operator =(const Vector<type, swizzleDimensions>& vec) {
+			for(uint i = 0; i < swizzleDimensions; ++i) {
 				array[order[i]] = vec[i];
 			}
 			return *this;
@@ -84,8 +78,7 @@ namespace Wyevern::Mathematics
 	};
 
 	template<typename type, uint vectorDimensions, uint swizzleComponent>
-	class Swizzle1D final
-	{
+	class Swizzle1D final {
 	private:
 		std::array<type, vectorDimensions> array;
 
@@ -95,8 +88,7 @@ namespace Wyevern::Mathematics
 	};
 
 	template<typename type>
-	union Vector<type, 2>
-	{
+	union Vector<type, 2> {
 		// Checks
 		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
 
@@ -110,8 +102,7 @@ namespace Wyevern::Mathematics
 	};
 
 	template<typename type>
-	union Vector<type, 3>
-	{
+	union Vector<type, 3> {
 		// Checks
 		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
 
@@ -125,8 +116,7 @@ namespace Wyevern::Mathematics
 	};
 
 	template<typename type>
-	union Vector<type, 4>
-	{
+	union Vector<type, 4> {
 		// Checks
 		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
 

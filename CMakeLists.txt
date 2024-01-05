@@ -11,8 +11,11 @@ set(SDL2_INCLUDE_DIRS "${SDL2_BINARY_DIR}/include")
 add_subdirectory(WyeGen)
 add_subdirectory(WyeMaths)
 
-add_executable(Wyevern "Instance.cpp"
+add_executable(Wyevern
+	"Global/Architecture.hpp"
+	"Instance.cpp"
 	"Window.cpp"
+	"JobSystem/JobQueue.hpp"
 	"JobSystem/JobSystem.cpp" "JobSystem/JobSystem.hpp"
 	"JobSystem/JobHandle.hpp" "JobSystem/JobHandle.cpp"
 	"JobSystem/Job.hpp"

@@ -9,16 +9,16 @@
 #include <thread>
 #include <vector>
 
-namespace Wyevern::Jobs
-{
-	class JobSystem final
-	{
+namespace Wyevern::Jobs {
+	class JobSystem final {
 	public:
-		explicit JobSystem(unsigned threads = 0u);
+		explicit JobSystem(unsigned threadCount = 0u);
 
 		template<typename JobType>
-		std::shared_ptr<JobHandle> Schedule(const JobType& job, std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt)
-		{
+		std::shared_ptr<JobHandle> Schedule(
+			const JobType& job,
+			std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt
+		) {
 			std::shared_ptr<JobHandle> handle = std::make_shared<JobHandle>(job, parent);
 			
 			return handle;

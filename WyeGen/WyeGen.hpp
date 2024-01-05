@@ -4,13 +4,10 @@
 #include <fstream>
 #include <string>
 
-namespace Wyevern
-{
-	class WyeGen
-	{
+namespace Wyevern {
+	class WyeGen {
 	protected:
 		std::ofstream file;
-
 	public:
 		explicit WyeGen(const std::string& path);
 		~WyeGen();

@@ -4,8 +4,7 @@
 
 using namespace Wyevern::Jobs;
 
-JobSystem::JobSystem(unsigned threadCount)
-{
+JobSystem::JobSystem(unsigned threadCount) {
 	const unsigned coreCount = std::thread::hardware_concurrency();
 	
 	// Target the amount of cores minus 1, as main thread will become a worker thread too.
@@ -17,18 +16,15 @@ JobSystem::JobSystem(unsigned threadCount)
 
 	// Initialise the worker threads
 	threads.reserve(this->threadCount);
-	for(unsigned threadID = 0; threadID < this->threadCount; ++threadID)
-	{
-		threads.push_back(std::thread(WorkerThread));
+	for(unsigned threadID = 0; threadID < this->threadCount; ++threadID) {
+		threads.emplace_back(WorkerThread);
 		std::thread& thread = threads.back();
 		thread.detach();
 	}
 }
 
-void JobSystem::WorkerThread()
-{
-	while(true)
-	{
+void JobSystem::WorkerThread() {
+	while(true) {
 		
 	}
 }

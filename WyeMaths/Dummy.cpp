@@ -2,8 +2,7 @@
 
 using namespace Wyevern::Mathematics;
 
-void dummy()
-{
+void dummy() {
 	VectorArray<float, 4> test;
 	std::vector<float> component = test.x;
 

@@ -11,21 +11,17 @@
 #include <memory>
 #include <optional>
 
-namespace Wyevern::Jobs
-{
-	struct JobHandle
-	{
+namespace Wyevern::Jobs {
+	struct JobHandle final {
 		template<typename JobType>
-		JobHandle
-		(
+		explicit JobHandle(
 			const JobType& job,
 			std::optional<std::shared_ptr<JobHandle>> parent = std::nullopt
 		):
-			data(job),
-			unfinished(1)
+			unfinished(1),
+			data(job)
 		{
-			if(parent.has_value())
-			{
+			if(parent.has_value()) {
 				++(parent.value()->unfinished);
 			}
 			this->parent = parent;
@@ -34,7 +30,7 @@ namespace Wyevern::Jobs
 		JobHandle();
 		JobHandle(const JobHandle& other);
 		JobHandle& operator=(const JobHandle& other);
-		virtual ~JobHandle() {}
+		~JobHandle() = default;
 
 		/// <summary>
 		/// The amount of unfinished children this job has, plus itself.
@@ -46,59 +42,50 @@ namespace Wyevern::Jobs
 		/// </summary>
 		std::optional<std::shared_ptr<JobHandle>> parent;
 
-		union DataContainer
-		{
+		union DataContainer final {
 			friend struct JobHandle;
 		private:
-			static constexpr auto PaddingSize = Wyevern::Architecture::FalseSharingMitigation
-				- sizeof(parent)
-				- sizeof(unfinished);
+			static constexpr std::size_t PaddingSize = Architecture::PadToCache(
+				sizeof(parent)
+			+	sizeof(unfinished)
+			);
 
 			std::unique_ptr<Job> reference;
 			std::array<std::byte, PaddingSize> data;
 		public:
 			template<typename JobType>
-			static constexpr bool IsStoredLocally()
-			{
+			static constexpr bool IsStoredLocally() {
 				return sizeof(JobType) <= PaddingSize;
 			}
 
 			DataContainer();
 			DataContainer(const DataContainer& other);
+
 			DataContainer& operator=(const DataContainer& other);
+
 			~DataContainer() {}
 
 			template<typename JobType>
-			explicit DataContainer(const JobType& job)
-			{
-				if constexpr(IsStoredLocally<JobType>())
-				{
+			explicit DataContainer(const JobType& job) {
+				if constexpr(IsStoredLocally<JobType>()) {
 					// Can store data in the job struct
 					data = std::bit_cast<std::array<std::byte, PaddingSize>>(job);
-				}
-				else
-				{
+				} else {
 					// Cannot store the data in the job struct, store a pointer to it instead.
 					reference = std::make_unique<JobType>(job);
 				}
 			}
 
 			template<typename JobType>
-			JobType& Get()
-			{
-				if constexpr(IsStoredLocally<JobType>())
-				{
+			JobType& Get() {
+				if constexpr(IsStoredLocally<JobType>()) {
 					// Data is in the job struct
 					return reinterpret_cast<JobType&>(&data);
-				}
-				else
-				{
+				} else {
 					// Data is in the pointer
 					return dynamic_cast<JobType&>(reference.get());
 				}
 			}
-		private:
-			static void CopyOpImpl(const DataContainer& src, DataContainer& dest);
 		};
 		DataContainer data;
 	};
