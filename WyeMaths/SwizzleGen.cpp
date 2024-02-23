@@ -89,7 +89,7 @@ int main() {
 				results.append(definition);
 			}
 		}
-		vector.Macro_Define("WYEMATHS_GENERATED_VECTOR" + vectorIndexString + "_SWIZZLES", results);
+		vector.Macro_Define("WYEMATHS_GENERATED_VECTOR" + vectorIndexString + "_SWIZZLES(type)", results);
 
 		vector.Space();
 		vector.Macro_IfDefined_End();

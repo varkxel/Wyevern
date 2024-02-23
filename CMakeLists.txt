@@ -14,7 +14,6 @@ add_subdirectory(WyeMaths)
 add_executable(Wyevern
 	"Global/Architecture.hpp"
 	"Instance.cpp"
-	"Window.cpp"
 	"JobSystem/JobQueue.hpp"
 	"JobSystem/JobSystem.cpp" "JobSystem/JobSystem.hpp"
 	"JobSystem/JobHandle.hpp" "JobSystem/JobHandle.cpp"

@@ -54,23 +54,23 @@ namespace Wyevern::Mathematics {
 	};
 
 	template<typename type, uint dimensions>
-	struct VectorArray : public VectorArrayBase<type, dimensions> {
+	struct VectorArray : VectorArrayBase<type, dimensions> {
 		// Template specialization is fun, isn't it?
 	};
 
 	template<typename type>
-	struct VectorArray<type, 1> : public VectorArrayBase<type, 1> {
+	struct VectorArray<type, 1> : VectorArrayBase<type, 1> {
 		std::vector<type>& x = this->components[0];
 	};
 
 	template<typename type>
-	struct VectorArray<type, 2> : public VectorArrayBase<type, 2> {
+	struct VectorArray<type, 2> : VectorArrayBase<type, 2> {
 		std::vector<type>& x = this->components[0];
 		std::vector<type>& y = this->components[1];
 	};
 
 	template<typename type>
-	struct VectorArray<type, 3> : public VectorArrayBase<type, 3>
+	struct VectorArray<type, 3> : VectorArrayBase<type, 3>
 	{
 		std::vector<type>& x = this->components[0];
 		std::vector<type>& y = this->components[1];
@@ -78,7 +78,7 @@ namespace Wyevern::Mathematics {
 	};
 
 	template<typename type>
-	struct VectorArray<type, 4> : public VectorArrayBase<type, 4>
+	struct VectorArray<type, 4> : VectorArrayBase<type, 4>
 	{
 		std::vector<type>& x = this->components[0];
 		std::vector<type>& y = this->components[1];

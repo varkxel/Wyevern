@@ -36,6 +36,9 @@
 	} \
 	constexpr Vector() = default;
 
+#define WYEMATHS_VECTOR_DEFINE_CHECKS(type) \
+	static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
+
 namespace Wyevern::Mathematics {
 	/// \summary n-Dimensional Vector type.
 	template<typename type, uint dimensions>
@@ -89,8 +92,7 @@ namespace Wyevern::Mathematics {
 
 	template<typename type>
 	union Vector<type, 2> {
-		// Checks
-		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
+		WYEMATHS_VECTOR_DEFINE_CHECKS(type);
 
 		WYEMATHS_VECTOR_DEFINE_ARRAY(type, 2, array);
 
@@ -98,13 +100,12 @@ namespace Wyevern::Mathematics {
 
 		WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, 2);
 
-		WYEMATHS_GENERATED_VECTOR2_SWIZZLES;
+		WYEMATHS_GENERATED_VECTOR2_SWIZZLES(type);
 	};
 
 	template<typename type>
 	union Vector<type, 3> {
-		// Checks
-		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
+		WYEMATHS_VECTOR_DEFINE_CHECKS(type);
 
 		WYEMATHS_VECTOR_DEFINE_ARRAY(type, 3, array);
 
@@ -112,13 +113,12 @@ namespace Wyevern::Mathematics {
 
 		WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, 3);
 
-		WYEMATHS_GENERATED_VECTOR3_SWIZZLES;
+		WYEMATHS_GENERATED_VECTOR3_SWIZZLES(type);
 	};
 
 	template<typename type>
 	union Vector<type, 4> {
-		// Checks
-		static_assert(std::is_arithmetic_v<type>, "Vector must be created with a numeric type.");
+		WYEMATHS_VECTOR_DEFINE_CHECKS(type);
 
 		WYEMATHS_VECTOR_DEFINE_ARRAY(type, 4, array);
 
@@ -126,7 +126,7 @@ namespace Wyevern::Mathematics {
 
 		WYEMATHS_VECTOR_DEFINE_CONSTRUCTORS(type, 4);
 
-		WYEMATHS_GENERATED_VECTOR4_SWIZZLES;
+		WYEMATHS_GENERATED_VECTOR4_SWIZZLES(type);
 	};
 
 	typedef Vector<int32, 2> int2_32;
