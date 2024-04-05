@@ -3,18 +3,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED 20)
 
 set(Wyevern_Version 0.0.0)
 
-set(Wyevern_Platforms
-	Unknown
-	Windows
-	Linux
-)
+set(Wyevern_Platform_Windows INTERNAL "Windows")
+set(Wyevern_Platform_UNIX INTERNAL "UNIX")
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	set(Wyevern_Platform Windows)
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-	set(Wyevern_Platform Linux)
-else()
-	set(Wyevern_Platform Unknown)
+if(WIN32)
+	set(Wyevern_Platform ${Wyevern_Platform_Windows})
+elseif(UNIX)
+	set(Wyevern_Platform ${Wyevern_Platform_UNIX})
 endif()
-
-set_property(CACHE Wyevern_Platform PROPERTY STRINGS ${Wyevern_Platforms})

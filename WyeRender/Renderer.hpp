@@ -10,7 +10,7 @@ namespace Wyevern::Rendering {
 
 		typedef int Window;
 		virtual Window CreateWindow(int width, int height, const std::string& title) = 0;
-		virtual void DestroyWindow(Window window);
+		virtual void DestroyWindow(Window window) = 0;
 	};
 }
 

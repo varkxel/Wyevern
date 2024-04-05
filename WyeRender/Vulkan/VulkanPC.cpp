@@ -1,6 +1,6 @@
 #include "VulkanRenderer.hpp"
 
-#include "SDLCommon.hpp"
+#include <SDLCommon.hpp>
 #include <SDL2/SDL_video.h>
 #include <vector>
 #include <stdexcept>
@@ -10,7 +10,7 @@ using namespace Wyevern::Rendering::Vulkan;
 
 std::vector<SDL_Window*> windows;
 
-Window VulkanRenderer::CreateWindow(int width, int height, const std::string& title) {
+Renderer::Window VulkanRenderer::CreateWindow(int width, int height, const std::string& title) {
 	Wyevern::SDLCommon::InitVideo();
 
 	SDL_Window* window = SDL_CreateWindow(
