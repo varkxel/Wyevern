@@ -4,8 +4,6 @@ include("Global.cmake")
 
 project(Wyevern LANGUAGES CXX VERSION ${Wyevern_Version})
 
-add_subdirectory(Platforms)
-
 add_subdirectory(WyeGen)
 add_subdirectory(WyeMaths)
 add_subdirectory(WyeRender)
@@ -17,6 +15,8 @@ add_executable(Wyevern
 	"JobSystem/JobSystem.cpp" "JobSystem/JobSystem.hpp"
 	"JobSystem/JobHandle.hpp" "JobSystem/JobHandle.cpp"
 	"JobSystem/Job.hpp"
+
+	"Module.hpp"
 )
 
 # Include base folder
