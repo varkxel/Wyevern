@@ -35,6 +35,12 @@ namespace Wyevern {
 			
 			auto entry = reinterpret_cast<EntryFunction>(dlsym(handle, entryPoint));
 			auto exit = reinterpret_cast<ExitFunction>(dlsym(handle, exitPoint));
+			
+			if(entry == nullptr || exit == nullptr) {
+				// Function initialisation failed.
+			}
+			
+			return std::shared_ptr<TModule>(entry(), [exit](TModule* module){ exit(module); });
 		}
 	};
 }
