@@ -7,11 +7,6 @@
 #include <iostream>
 #include <memory>
 
-#define WYEVERN_MODULE_START() extern "C" {
-#define WYEVERN_MODULE_END() }
-
-#define WYEVERN_MODULE_FUNCTION
-
 namespace Wyevern {
 	template<typename TModule, const char* entryPoint, const char* exitPoint>
 	class Module {
