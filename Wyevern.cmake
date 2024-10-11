@@ -1,5 +1,4 @@
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED 20)
+set(Wyevern_CXX_Version cxx_std_23)
 
 set(Wyevern_Version 0.0.0)
 
@@ -11,3 +10,8 @@ if(WIN32)
 elseif(UNIX)
 	set(Wyevern_Platform ${Wyevern_Platform_UNIX})
 endif()
+
+function(AddWyevernApplication Project Sources)
+	add_library(${Project} SHARED ${Sources})
+	target_include_directories(${Project} PUBLIC ${Wyevern_SOURCE_DIR})
+endfunction()

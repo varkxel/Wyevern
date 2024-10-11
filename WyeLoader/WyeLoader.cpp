@@ -1,9 +1,7 @@
-
-#ifndef WYEVERN_GAME_MODULE
-	#define WYEVERN_GAME_MODULE nullptr
-#endif
+#include <Module.hpp>
+#include <WyevernApplication.hpp>
 
 int main(int argc, char** argv)
 {
-	
+	Wyevern::Module<Wyevern::WyevernApplication, ""> application;
 }

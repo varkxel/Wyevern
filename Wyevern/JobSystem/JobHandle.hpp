@@ -12,6 +12,7 @@
 #include <optional>
 
 namespace Wyevern::Jobs {
+	/// 
 	struct JobHandle final {
 		template<typename JobType>
 		explicit JobHandle(
