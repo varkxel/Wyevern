@@ -14,6 +14,7 @@ add_library(Wyevern SHARED
 	
 	"Module.hpp"
 )
+WyevernExport(Wyevern)
 
 target_compile_features(Wyevern PUBLIC ${Wyevern_CXX_Version})
 
@@ -29,4 +30,4 @@ target_include_directories(Wyevern PUBLIC ${Wyevern_SOURCE_DIR})
 # Modules
 target_link_libraries(Wyevern PUBLIC WyeMaths)
 
-target_include_directories(Wyevern PUBLIC ${WyeMaths_SOURCE_DIR})
+target_include_directories(Wyevern PUBLIC ${WyeMaths_SOURCE_DIR}/Include)
