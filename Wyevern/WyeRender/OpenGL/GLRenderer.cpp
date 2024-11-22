@@ -1,4 +1,4 @@
-#include "VulkanRenderer.hpp"
+#include "GLRenderer.hpp"
 
 #include <SDLCommon.hpp>
 #include <SDL2/SDL_video.h>

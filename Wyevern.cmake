@@ -2,15 +2,17 @@ set(Wyevern_CXX_Version cxx_std_23)
 
 set(Wyevern_Version 0.0.0)
 
-set(Wyevern_Platform_Windows INTERNAL "Windows")
-set(Wyevern_Platform_UNIX INTERNAL "UNIX")
+set(Wyevern_Platform_Windows "Windows")
+set(Wyevern_Platform_UNIX "UNIX")
 
 if(WIN32)
 	set(Wyevern_Platform ${Wyevern_Platform_Windows})
 	add_compile_definitions(WYEVERN_PLATFORM_WINDOWS)
+	set(Wyevern_SharedExtension ".dll")
 elseif(UNIX)
 	set(Wyevern_Platform ${Wyevern_Platform_UNIX})
 	add_compile_definitions(WYEVERN_PLATFORM_UNIX)
+	set(Wyevern_SharedExtension ".so")
 endif()
 
 add_compile_definitions(WYEVERN_PLATFORM=${Wyevern_Platform})

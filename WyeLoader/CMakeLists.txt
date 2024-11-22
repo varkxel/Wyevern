@@ -1,11 +1,11 @@
 
 include("../Wyevern.cmake")
 
-set(WyeLoader_WEXPath "" CACHE STRING "Set this to automatically load the specified path as the game module library.")
-if(NOT WyeLoader_WEXPath STREQUAL "")
-	set(WyeLoader_WEXPath_Set ON)
+set(WyeLoader_GamePath "" CACHE STRING "Set this to automatically load the specified path as the game module library.")
+if(NOT WyeLoader_GamePath STREQUAL "")
+	set(WyeLoader_GamePath_Set ON)
 else()
-	set(WyeLoader_WEXPath_Set OFF)
+	set(WyeLoader_GamePath_Set OFF)
 endif()
 
 add_executable(WyeLoader
@@ -14,7 +14,7 @@ add_executable(WyeLoader
 WyevernExport(WyeLoader)
 
 if(${WyeLoader_WEXPath_Set})
-	target_compile_definitions(WyeLoader PRIVATE WyeLoader_WEX_Path="${WyeLoader_WEXPath}")
+	target_compile_definitions(WyeLoader PRIVATE WyeLoader_GamePath="${WyeLoader_GamePath}${Wyevern_SharedExtension}")
 endif()
 
 target_link_libraries(WyeLoader PRIVATE Wyevern)
