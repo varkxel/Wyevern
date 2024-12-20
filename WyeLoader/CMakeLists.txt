@@ -13,7 +13,8 @@ add_executable(WyeLoader
 )
 WyevernExport(WyeLoader)
 
-if(${WyeLoader_WEXPath_Set})
+if(${WyeLoader_GamePath_Set})
+	message("WyeLoader game path set to: \"${WyeLoader_GamePath}\"")
 	target_compile_definitions(WyeLoader PRIVATE WyeLoader_GamePath="${WyeLoader_GamePath}${Wyevern_SharedExtension}")
 endif()
 

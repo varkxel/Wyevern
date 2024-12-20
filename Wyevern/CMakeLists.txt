@@ -5,7 +5,7 @@ project(Wyevern LANGUAGES CXX VERSION ${Wyevern_Version})
 add_library(Wyevern SHARED
 	"WyevernApplication.hpp"
 	
-	"Global/Architecture.hpp"
+	"Architecture.hpp"
 	
 	"JobSystem/JobQueue.hpp"
 	"JobSystem/JobSystem.cpp" "JobSystem/JobSystem.hpp"
@@ -20,6 +20,7 @@ target_compile_features(Wyevern PUBLIC ${Wyevern_CXX_Version})
 
 add_subdirectory(WyeMaths)
 add_subdirectory(WyeRender)
+add_subdirectory(SDLCommon)
 
 add_link_options("stdc++exp")
 add_link_options("stdc++_libbacktrace")

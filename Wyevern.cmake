@@ -5,6 +5,12 @@ set(Wyevern_Version 0.0.0)
 set(Wyevern_Platform_Windows "Windows")
 set(Wyevern_Platform_UNIX "UNIX")
 
+# Move when needed in the future
+function(Wyevern_SDLCommon_Include project)
+	message("${Wyevern_SOURCE_DIR}/SDLCommon/SDL/include")
+	target_include_directories(${project} PUBLIC "${Wyevern_SOURCE_DIR}/SDLCommon/SDL/include")
+endfunction()
+
 if(WIN32)
 	set(Wyevern_Platform ${Wyevern_Platform_Windows})
 	add_compile_definitions(WYEVERN_PLATFORM_WINDOWS)

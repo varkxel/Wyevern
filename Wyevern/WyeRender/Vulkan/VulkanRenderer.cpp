@@ -1,7 +1,7 @@
-#include "GLRenderer.hpp"
+#include "VulkanRenderer.hpp"
 
-#include <SDLCommon.hpp>
-#include <SDL2/SDL_video.h>
+#include <SDLCommon/SDLCommon.hpp>
+#include <SDL3/SDL.h>
 #include <vector>
 #include <stdexcept>
 
@@ -11,18 +11,17 @@ using namespace Wyevern::Rendering::Vulkan;
 std::vector<SDL_Window*> windows;
 
 Renderer::Window VulkanRenderer::CreateWindow(int width, int height, const std::string& title) {
-	Wyevern::SDLCommon::InitVideo();
+	SDLCommon::Video::Init();
 
 	SDL_Window* window = SDL_CreateWindow(
 		title.c_str(),
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		width, height,
 		SDL_WINDOW_VULKAN
 	);
 
 	if(window == nullptr) {
 		throw std::runtime_error(
-			"SDL2 Vulkan Window failed to be created.\nReason:\n"
+			"SDL3 Vulkan Window failed to be created.\nReason:\n"
 		+	std::string(SDL_GetError())
 		);
 	}
@@ -33,6 +32,6 @@ Renderer::Window VulkanRenderer::CreateWindow(int width, int height, const std::
 	return id;
 }
 
-void VulkanRenderer::DestroyWindow(Renderer::Window window) {
-	Wyevern::SDLCommon::TerminateVideo();
+void VulkanRenderer::DestroyWindow(Window window) {
+	SDLCommon::Video::Terminate();
 }

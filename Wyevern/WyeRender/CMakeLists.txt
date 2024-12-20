@@ -1,10 +1,13 @@
+cmake_minimum_required(VERSION 3.30)
 
-if("${Wyevern_Platform}" STREQUAL "Windows" OR "${Wyevern_Platform}" STREQUAL "UNIX")
-    # Enable platforms for Windows and Unix (Vulkan, OpenGL)
-	add_subdirectory(OpenGL)
-endif()
+project(Wyevern_Renderer)
 
-if("${Wyevern_Platform}" STREQUAL "Windows")
-	# Enable platforms for Windows only (Direct3D)
-	
-endif()
+add_library(Wyevern_Renderer Renderer.hpp)
+set_target_properties(Wyevern_Renderer PROPERTIES LINKER_LANGUAGE CXX)
+
+function(Wyevern_AddRenderer rendererProject)
+	target_include_directories(${rendererProject} PRIVATE "${Wyevern_SOURCE_DIR}")
+	target_link_libraries(${rendererProject} PRIVATE Wyevern_Renderer)
+endfunction()
+
+add_subdirectory(Vulkan)

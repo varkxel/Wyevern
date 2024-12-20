@@ -1,7 +1,7 @@
 #ifndef WYEVERN_JOBHANDLE_INCLUDED
 #define WYEVERN_JOBHANDLE_INCLUDED
 
-#include "Global/Architecture.hpp"
+#include "../Architecture.hpp"
 
 #include "Job.hpp"
 
