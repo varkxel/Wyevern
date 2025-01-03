@@ -32,6 +32,6 @@ Renderer::Window VulkanRenderer::CreateWindow(int width, int height, const std::
 	return id;
 }
 
-void VulkanRenderer::DestroyWindow(Window window) {
+void VulkanRenderer::DestroyWindow(Windowing window) {
 	SDLCommon::Video::Terminate();
 }

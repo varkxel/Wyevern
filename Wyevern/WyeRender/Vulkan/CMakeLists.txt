@@ -10,7 +10,10 @@ if("${Wyevern_Platform}" STREQUAL "${Wyevern_Platform_UNIX}" OR "${Wyevern_Platf
 	if(${Wyevern_Vulkan_Enabled})
 		message("Vulkan enabled")
 		
-		add_library(Wyevern_Vulkan VulkanRenderer.hpp VulkanRenderer.cpp)
+		add_library(Wyevern_Vulkan
+			"VulkanRenderer.hpp" "VulkanRenderer.cpp"
+			"VulkanWindowing.hpp"
+		)
 		Wyevern_AddRenderer(Wyevern_Vulkan)
 		
 		Wyevern_SDLCommon_Include(Wyevern_Vulkan)

@@ -2,15 +2,21 @@
 #define WYEVERN_RENDERER_INCLUDED
 
 #include <string>
+#include <memory>
+
+#include "Windowing.hpp"
 
 namespace Wyevern::Rendering {
+	typedef std::size_t WindowID;
+
 	class Renderer {
 	public:
-		virtual ~Renderer() = 0;
+		virtual ~Renderer() = default;
 
-		typedef int Window;
-		virtual Window CreateWindow(int width, int height, const std::string& title) = 0;
-		virtual void DestroyWindow(Window window) = 0;
+		WindowID CreateWindow();
+		void DestroyWindow(WindowID id);
+	protected:
+		virtual std::unique_ptr<Window> WindowConstructor() = 0;
 	};
 }
 

@@ -5,8 +5,8 @@
 
 namespace Wyevern::Rendering::Vulkan {
 	class VulkanRenderer final : Renderer {
-		Window CreateWindow(int width, int height, const std::string& title) override;
-		void DestroyWindow(Window window) override;
+	protected:
+		std::unique_ptr<Window> WindowConstructor() override;
 	};
 }
 
