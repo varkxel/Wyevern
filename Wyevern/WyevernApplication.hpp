@@ -2,6 +2,7 @@
 #define WYEVERN_APPLICATION_INCLUDED
 
 #include "Module.hpp"
+#include "WyeRender/Renderer.hpp"
 
 #define Wyevern_Application_Entry_Function_Name WyevernAppStart
 #define Wyevern_Application_Exit_Function_Name WyevernAppExit
@@ -31,6 +32,7 @@
 namespace Wyevern {
 	class WyevernApplication {
 	public:
+		WyevernApplication(std::unique_ptr<Rendering::Renderer> renderer);
 		virtual ~WyevernApplication() = default;
 	};
 }

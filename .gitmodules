@@ -1,6 +1,3 @@
 [submodule "Wyevern/WyeRender/OpenGL/glbinding"]
 	path = Wyevern/WyeRender/OpenGL/glbinding
 	url = https://github.com/cginternals/glbinding.git
-[submodule "Wyevern/WyeRender/SDLCommon/SDL"]
-	path = Wyevern/SDLCommon/SDL
-	url = https://github.com/libsdl-org/SDL.git

@@ -16,7 +16,7 @@ Wyevern_Module_Functions_End()
 
 namespace Wyevern::Editor
 {
-	WyeForge::WyeForge()
+	WyeForge::WyeForge() : WyevernApplication()
 	{
 		std::cout << "loaded!" << std::endl;
 	}

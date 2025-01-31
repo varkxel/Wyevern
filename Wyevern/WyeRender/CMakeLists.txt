@@ -13,4 +13,4 @@ function(Wyevern_AddRenderer rendererProject)
 	target_link_libraries(${rendererProject} PRIVATE Wyevern_Renderer)
 endfunction()
 
-add_subdirectory(Vulkan)
+add_subdirectory(OpenGL)
