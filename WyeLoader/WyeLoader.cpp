@@ -12,10 +12,10 @@
 using namespace Wyevern;
 
 int main(int argc, char** argv) {
-	std::unique_ptr<Module<WyevernApplication>> application = nullptr;
+	std::unique_ptr<ExternalModule<WyevernApplication>> application = nullptr;
 	std::shared_ptr<WyevernApplication> instance = nullptr;
 	try {
-		application = std::make_unique<Module<WyevernApplication>>(
+		application = std::make_unique<ExternalModule<WyevernApplication>>(
 			std::string(WyeLoader_GamePath),
 			ToString(Wyevern_Application_Entry_Function_Name),
 			ToString(Wyevern_Application_Exit_Function_Name)

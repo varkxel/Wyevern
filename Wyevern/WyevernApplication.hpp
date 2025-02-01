@@ -32,7 +32,7 @@
 namespace Wyevern {
 	class WyevernApplication {
 	public:
-		WyevernApplication(std::unique_ptr<Rendering::Renderer> renderer);
+		WyevernApplication();
 		virtual ~WyevernApplication() = default;
 	};
 }

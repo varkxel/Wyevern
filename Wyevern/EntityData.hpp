@@ -3,10 +3,8 @@
 
 #include "Component.hpp"
 
-namespace Wyevern
-{
-	class EntityData
-	{
+namespace Wyevern {
+	class EntityData {
 	private:
 		
 	};

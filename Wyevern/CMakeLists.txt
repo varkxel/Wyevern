@@ -13,6 +13,7 @@ add_library(Wyevern SHARED
 	"JobSystem/Job.hpp"
 	
 	"Module.hpp"
+	"Platform.hpp"
 )
 WyevernExport(Wyevern)
 
