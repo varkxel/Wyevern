@@ -13,14 +13,14 @@ using namespace Wyevern;
 
 int main(int argc, char** argv) {
 	std::unique_ptr<ExternalModule<WyevernApplication>> application = nullptr;
-	std::shared_ptr<WyevernApplication> instance = nullptr;
+	WyevernApplication* instance = nullptr;
 	try {
 		application = std::make_unique<ExternalModule<WyevernApplication>>(
 			std::string(WyeLoader_GamePath),
 			ToString(Wyevern_Application_Entry_Function_Name),
 			ToString(Wyevern_Application_Exit_Function_Name)
 		);
-		instance = application->Instance();
+		//instance = application->Instance();
 	} catch(const std::runtime_error& error) {
 		std::cerr << "WyeLoader failed to start.\nError: " << error.what() << std::endl;
 		return EXIT_FAILURE;

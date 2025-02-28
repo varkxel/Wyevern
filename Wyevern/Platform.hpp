@@ -8,7 +8,7 @@
 
 namespace Wyevern {
 	struct Platform {
-		std::shared_ptr<Module<Rendering::Renderer>> renderer;
+
 	};
 }
 

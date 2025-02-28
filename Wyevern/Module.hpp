@@ -24,20 +24,20 @@ namespace Wyevern {
 	public:
 		virtual ~Module() = default;
 
-		virtual std::unique_ptr<TModule> Instance() = 0;
+		TModule* Instance;
 	};
 
-	template<typename TModule>
+	template<typename TModule, typename... Args>
 	class StaticModule final : public Module<TModule> {
 	public:
-		std::unique_ptr<TModule> Instance() override {
-			return std::make_unique<TModule>();
+		explicit StaticModule(Args&&... args) {
+			this->Instance = new TModule(std::forward<Args>(args));
 		}
 	};
 
 	template<typename TModule>
 	class ExternalModule final : public Module<TModule> {
-	protected:
+	private:
 		const std::string path;
 		const std::string entryMethod;
 		const std::string exitMethod;
@@ -50,27 +50,31 @@ namespace Wyevern {
 			if(handle == nullptr) {
 				throw std::runtime_error(dlerror());
 			}
-		}
-		
-		~ExternalModule() override {
-			if(dlclose(handle) != 0) {
-				std::cerr << dlerror() << std::endl;
-			}
-		}
-		
-		std::shared_ptr<TModule> Instance() override {
+
 			using EntryFunction = TModule* (*) ();
-			using ExitFunction = void (*) (TModule*);
-			
 			auto entry = reinterpret_cast<EntryFunction>(dlsym(handle, entryMethod.c_str()));
-			auto exit = reinterpret_cast<ExitFunction>(dlsym(handle, exitMethod.c_str()));
-			
-			if(entry == nullptr || exit == nullptr) {
+
+			if(entry == nullptr) {
 				// Function initialisation failed.
 				throw std::runtime_error(dlerror());
 			}
-			
-			return std::shared_ptr<TModule>(entry(), [exit](TModule* module){ exit(module); });
+
+			this->Instance = entry();
+		}
+
+		~ExternalModule() override {
+			using ExitFunction = void (*) (TModule*);
+			auto exit = reinterpret_cast<ExitFunction>(dlsym(handle, exitMethod.c_str()));
+
+			if(exit != nullptr) {
+				exit(this->Instance);
+			} else {
+				std::cerr << dlerror() << std::endl;
+			}
+
+			if(dlclose(handle) != 0) {
+				std::cerr << dlerror() << std::endl;
+			}
 		}
 	};
 }
